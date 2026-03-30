@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Walnut
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -68,10 +72,10 @@ PrefabInstance:
       addedObject: {fileID: 991917568129634041}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -4167147545345803239}
+      addedObject: {fileID: -7875759094086629556}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7875759094086629556}
+      addedObject: {fileID: -3018644081801427293}
   m_SourcePrefab: {fileID: 100100000, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
 --- !u!1 &5172674362930574554 stripped
 GameObject:
@@ -126,22 +130,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-4167147545345803239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5172674362930574554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa5a315231f554d4b8e3d5f244d00466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slicedPrefab: {fileID: 217664000543805541, guid: 1816a95bcfa619c4fb759505ad2d98ab, type: 3}
-  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 6891b936fce29864a92733e788ce2bbc, type: 3}
-  slicedLifetime: 3
-  juiceEffectLifetime: 2
 --- !u!114 &-7875759094086629556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,3 +143,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraOffset: 2
+--- !u!114 &-3018644081801427293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5172674362930574554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774f21a842f4dc44aa93ef4b57052232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slicedPrefab: {fileID: 5680939719963905704, guid: 2331105ad074617479d8425f4fbf32ec, type: 3}
+  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 69552e16b98afb54ea418b6e731141ee, type: 3}
+  slicedLifetime: 3
+  juiceEffectLifetime: 2
+  shellBrokenPrefab: {fileID: 8903447513092749022, guid: be3d380b1da3bf246bd32ce0972de8e2, type: 3}
+  secondHitDelay: 2
