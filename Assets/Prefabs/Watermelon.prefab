@@ -49,9 +49,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9cbb9e4775aee334cbccccfc03e22a4e, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
     - target: {fileID: 919132149155446097, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
       propertyPath: m_Name
       value: Watermelon
@@ -72,11 +84,16 @@ PrefabInstance:
       addedObject: {fileID: 3311255726286969396}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 49301813584788503}
+      addedObject: {fileID: -1210854195295335072}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -1210854195295335072}
+      addedObject: {fileID: -936502598805122909}
   m_SourcePrefab: {fileID: 100100000, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
+--- !u!23 &4629764443903402789 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
+  m_PrefabInstance: {fileID: 6305514031976955809}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6575473482563781360 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 38c619d684ccce34ba82911a312808b5, type: 3}
@@ -132,22 +149,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &49301813584788503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6575473482563781360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa5a315231f554d4b8e3d5f244d00466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slicedPrefab: {fileID: 4189925681413147042, guid: 046d84baee4b9a346a95d8eb1ae04b25, type: 3}
-  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 69552e16b98afb54ea418b6e731141ee, type: 3}
-  slicedLifetime: 3
-  juiceEffectLifetime: 2
 --- !u!114 &-1210854195295335072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +162,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraOffset: 2
+--- !u!114 &-936502598805122909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6575473482563781360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9892ab030bda1d4c8b2ac7cafac4400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slicedPrefab: {fileID: 4189925681413147042, guid: 046d84baee4b9a346a95d8eb1ae04b25, type: 3}
+  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 69552e16b98afb54ea418b6e731141ee, type: 3}
+  slicedLifetime: 3
+  juiceEffectLifetime: 2
+  hitsRequired: 3
+  hitDelay: 0.3
+  crackMaterials:
+  - {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
+  - {fileID: 2100000, guid: 881d164e2d37dbc42821d8c3b2dd396b, type: 2}
+  fruitRenderer: {fileID: 4629764443903402789}
+  hitSound: {fileID: 8300000, guid: 6ce37ca6c84991c49bf1fdc959a047e6, type: 3}

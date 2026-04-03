@@ -76,11 +76,16 @@ PrefabInstance:
       addedObject: {fileID: -8825059347316061513}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b8b59bcbcfeb15a4d8bb37f7f2707095, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6782138004337763960}
+      addedObject: {fileID: 5646323883236252651}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b8b59bcbcfeb15a4d8bb37f7f2707095, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5646323883236252651}
+      addedObject: {fileID: 319993602696108338}
   m_SourcePrefab: {fileID: 100100000, guid: b8b59bcbcfeb15a4d8bb37f7f2707095, type: 3}
+--- !u!23 &6430460177412520525 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2849821338866572018, guid: b8b59bcbcfeb15a4d8bb37f7f2707095, type: 3}
+  m_PrefabInstance: {fileID: 9129091245741678783}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8246202859000077806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b8b59bcbcfeb15a4d8bb37f7f2707095, type: 3}
@@ -134,22 +139,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6782138004337763960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8246202859000077806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa5a315231f554d4b8e3d5f244d00466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slicedPrefab: {fileID: 8132287025520331973, guid: 7993cec5025b5704589b161f658a3262, type: 3}
-  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 6891b936fce29864a92733e788ce2bbc, type: 3}
-  slicedLifetime: 3
-  juiceEffectLifetime: 2
 --- !u!114 &5646323883236252651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,3 +152,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraOffset: 2
+--- !u!114 &319993602696108338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8246202859000077806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9892ab030bda1d4c8b2ac7cafac4400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slicedPrefab: {fileID: 8132287025520331973, guid: 7993cec5025b5704589b161f658a3262, type: 3}
+  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 6891b936fce29864a92733e788ce2bbc, type: 3}
+  slicedLifetime: 3
+  juiceEffectLifetime: 3
+  hitsRequired: 3
+  hitDelay: 0.3
+  crackMaterials:
+  - {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
+  - {fileID: 2100000, guid: 881d164e2d37dbc42821d8c3b2dd396b, type: 2}
+  fruitRenderer: {fileID: 6430460177412520525}
+  hitSound: {fileID: 8300000, guid: 6ce37ca6c84991c49bf1fdc959a047e6, type: 3}
