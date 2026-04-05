@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -30,8 +30,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int xpToNextLevel = 100;
     [SerializeField] private int xpPerFruit = 20;
 
+    [Header("Currency")]
+    [SerializeField] private int currentCoins = 0;
+    [SerializeField] private TextMeshProUGUI coinsText;
+
     [Header("Level Up Message")]
     [SerializeField] private float levelUpMessageDuration = 1.5f;
+
+    [Header("Rounds")]
+    [SerializeField] private TextMeshProUGUI roundText;
+    [SerializeField] private int currentRound = 1;
+    [SerializeField] private int targetFruits = 10;
+    [SerializeField] private int currentFruits = 0;
+    [SerializeField] private int extraSpawn = 2;
+
+    private int spawnedFruits = 0;
+    private int slicedFruits = 0;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -92,6 +106,8 @@ public class GameManager : MonoBehaviour
         currentLevel = 1;
         currentXP = 0;
         xpToNextLevel = 100;
+        currentRound = 1;
+        currentCoins = 0;
 
         if (levelUpText != null)
         {
@@ -100,6 +116,8 @@ public class GameManager : MonoBehaviour
 
         UpdateStaminaUI();
         UpdateXPUI();
+        UpdateCoinsUI();
+        StartRound();
     }
 
     private void ClearScene()
@@ -129,7 +147,6 @@ public class GameManager : MonoBehaviour
         CurrentStamina = Mathf.Clamp(CurrentStamina, 0f, maxStamina);
 
         lastUseTime = Time.time;
-
         return CurrentStamina > 0f;
     }
 
@@ -159,8 +176,76 @@ public class GameManager : MonoBehaviour
 
         if (levelText != null)
         {
-            levelText.text = "Level " + currentLevel;
+            levelText.text = "LEVEL " + currentLevel;
         }
+    }
+
+    private void UpdateCoinsUI()
+    {
+        if (coinsText != null)
+        {
+            coinsText.text = currentCoins.ToString();
+        }
+    }
+
+    private void StartRound()
+    {
+        currentFruits = 0;
+        slicedFruits = 0;
+        spawnedFruits = 0;
+
+        targetFruits = 10 + (currentRound * 2);
+        int spawnCount = targetFruits + extraSpawn;
+
+        if (spawner != null)
+        {
+            spawner.StartSpawning(spawnCount);
+        }
+
+        UpdateRoundUI();
+    }
+
+    private void UpdateRoundUI()
+    {
+        if (roundText == null) return;
+
+        roundText.text = currentFruits + " / " + targetFruits;
+
+        if (currentFruits >= targetFruits)
+            roundText.color = Color.green;
+        else
+            roundText.color = Color.white;
+    }
+
+    public void OnSpawnFinished()
+    {
+        StartCoroutine(CheckEndRound());
+    }
+
+    private IEnumerator CheckEndRound()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if (currentFruits >= targetFruits)
+        {
+            WinRound();
+        }
+        else
+        {
+            LoseGame();
+        }
+    }
+
+    private void WinRound()
+    {
+        currentRound++;
+        StartRound();
+    }
+
+    private void LoseGame()
+    {
+        Debug.Log("GAME OVER");
+        Time.timeScale = 0f;
     }
 
     public void AddXP(int amount)
@@ -181,6 +266,19 @@ public class GameManager : MonoBehaviour
         AddXP(xpPerFruit);
     }
 
+    public void AddCoins(int amount)
+    {
+        currentCoins += amount;
+        UpdateCoinsUI();
+    }
+
+    public void OnFruitSliced()
+    {
+        currentFruits++;
+        slicedFruits++;
+        UpdateRoundUI();
+    }
+
     private void PlayLevelUpSound()
     {
         if (audioSource == null) return;
@@ -193,8 +291,6 @@ public class GameManager : MonoBehaviour
     private void LevelUp()
     {
         currentLevel++;
-
-        // Пока просто немного увеличим требуемый опыт на следующий уровень
         xpToNextLevel += 25;
 
         PlayLevelUpSound();

@@ -9,16 +9,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.09283081
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.269849
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.056561984
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6117322b9b059a34f8f32277953366cf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -97,12 +109,12 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.024670089
-  m_Center: {x: -0.000073757954, y: 0.0016216692, z: 0.0002656728}
+  m_Radius: 0.014119878
+  m_Center: {x: -0.000073758456, y: 0, z: 0.00026567318}
 --- !u!54 &991917568129634041
 Rigidbody:
   m_ObjectHideFlags: 0

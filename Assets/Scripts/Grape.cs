@@ -21,6 +21,7 @@ public class Grape : Fruit
         {
             GameManager.Instance.PlaySliceSound();
             GameManager.Instance.AddFruitXP();
+            GameManager.Instance.AddCoins(coinReward);
         }
 
         if (juiceEffectPrefab != null)
@@ -50,6 +51,11 @@ public class Grape : Fruit
             }
 
             Destroy(slicedObject, slicedLifetime);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnFruitSliced();
         }
 
         SpawnGrapes(direction);

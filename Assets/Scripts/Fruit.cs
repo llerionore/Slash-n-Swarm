@@ -8,6 +8,9 @@ public class Fruit : MonoBehaviour
     [SerializeField] protected float slicedLifetime = 3f;
     [SerializeField] protected float juiceEffectLifetime = 2f;
 
+    [Header("Rewards")]
+    [SerializeField] protected int coinReward = 5;
+
     protected Rigidbody fruitRigidbody;
     protected bool hasBeenSliced;
 
@@ -25,6 +28,7 @@ public class Fruit : MonoBehaviour
         {
             GameManager.Instance.PlaySliceSound();
             GameManager.Instance.AddFruitXP();
+            GameManager.Instance.AddCoins(coinReward);
         }
 
         if (juiceEffectPrefab != null)
@@ -35,6 +39,11 @@ public class Fruit : MonoBehaviour
 
             GameObject effect = Instantiate(juiceEffectPrefab, transform.position, effectRotation);
             Destroy(effect, juiceEffectLifetime);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnFruitSliced();
         }
 
         if (slicedPrefab != null)
