@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c4cd1c15c8f27334bb707afa1f61509e, type: 3}
       propertyPath: m_Name
-      value: chili
+      value: Chili
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -117,6 +117,12 @@ MonoBehaviour:
   juiceEffectPrefab: {fileID: 6152620863619634085, guid: 69552e16b98afb54ea418b6e731141ee, type: 3}
   slicedLifetime: 3
   juiceEffectLifetime: 2
+  coinReward: 5
+  canBeFrozen: 0
+  freezeChance: 0.2
+  freezeDuration: 1.5
+  slowTimeScale: 0.3
+  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
 --- !u!136 &-8983054667376010857
 CapsuleCollider:
   m_ObjectHideFlags: 0

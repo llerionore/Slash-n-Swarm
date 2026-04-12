@@ -28,6 +28,7 @@ public class Spawner : MonoBehaviour
     private int fruitsToSpawn;
     private int spawnedCount;
     private Coroutine spawnRoutine;
+    private float spawnSpeedMultiplier = 1f;
 
     private void Awake()
     {
@@ -44,33 +45,47 @@ public class Spawner : MonoBehaviour
     {
         fruitsToSpawn = count;
         spawnedCount = 0;
-
-        if (spawnRoutine != null)
-        {
-            StopCoroutine(spawnRoutine);
-        }
-
+        if (spawnRoutine != null) StopCoroutine(spawnRoutine);
         spawnRoutine = StartCoroutine(SpawnRoutine());
     }
 
-    private IEnumerator SpawnRoutine()
+    public void SetSpawnSpeedMultiplier(float multiplier)
     {
-        yield return new WaitForSeconds(1f);
+        spawnSpeedMultiplier = multiplier;
+    }
+
+    public void PauseSpawning()
+    {
+        if (spawnRoutine != null)
+        {
+            StopCoroutine(spawnRoutine);
+            spawnRoutine = null;
+        }
+    }
+
+    public void ResumeSpawning()
+    {
+        if (fruitsToSpawn - spawnedCount > 0)
+        {
+            spawnRoutine = StartCoroutine(SpawnRoutine(true));
+        }
+    }
+
+    private IEnumerator SpawnRoutine(bool skipDelay = false)
+    {
+        if (!skipDelay) yield return new WaitForSeconds(1f);
 
         while (spawnedCount < fruitsToSpawn)
         {
             SpawnFruit();
             spawnedCount++;
-
-            yield return new WaitForSeconds(Random.Range(minSpawnDelay, maxSpawnDelay));
+            float delay = Random.Range(minSpawnDelay, maxSpawnDelay) / spawnSpeedMultiplier;
+            yield return new WaitForSeconds(delay);
         }
 
         spawnRoutine = null;
-
         if (GameManager.Instance != null)
-        {
             GameManager.Instance.OnSpawnFinished();
-        }
     }
 
     private void SpawnFruit()
@@ -87,7 +102,6 @@ public class Spawner : MonoBehaviour
         );
 
         Quaternion rotation = Quaternion.Euler(0f, 0f, Random.Range(minAngle, maxAngle));
-
         GameObject fruit = Instantiate(prefab, position, rotation);
 
         Rigidbody rb = fruit.GetComponent<Rigidbody>();
@@ -101,7 +115,6 @@ public class Spawner : MonoBehaviour
                 Random.Range(minTorque.y, maxTorque.y),
                 Random.Range(minTorque.z, maxTorque.z)
             );
-
             rb.AddTorque(randomTorque, ForceMode.Impulse);
         }
     }

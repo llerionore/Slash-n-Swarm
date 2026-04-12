@@ -44,6 +44,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int currentFruits = 0;
     [SerializeField] private int extraSpawn = 2;
 
+    [Header("Bomb")]
+    [SerializeField] private float bombPauseDuration = 2f;
+
+    [Header("Freeze")]
+    [SerializeField] private float freezeDuration = 1.5f;
+    [SerializeField] private float freezeSlowScale = 0.3f;
+
     private int spawnedFruits = 0;
     private int slicedFruits = 0;
 
@@ -60,6 +67,7 @@ public class GameManager : MonoBehaviour
 
     private float lastUseTime;
     private Coroutine levelUpRoutine;
+    private Coroutine freezeRoutine;
 
     private void Awake()
     {
@@ -68,16 +76,12 @@ public class GameManager : MonoBehaviour
             DestroyImmediate(gameObject);
             return;
         }
-
         Instance = this;
     }
 
     private void OnDestroy()
     {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
+        if (Instance == this) Instance = null;
     }
 
     private void Start()
@@ -109,10 +113,7 @@ public class GameManager : MonoBehaviour
         currentRound = 1;
         currentCoins = 0;
 
-        if (levelUpText != null)
-        {
-            levelUpText.gameObject.SetActive(false);
-        }
+        if (levelUpText != null) levelUpText.gameObject.SetActive(false);
 
         UpdateStaminaUI();
         UpdateXPUI();
@@ -123,11 +124,7 @@ public class GameManager : MonoBehaviour
     private void ClearScene()
     {
         Fruit[] fruits = FindObjectsOfType<Fruit>();
-
-        foreach (Fruit fruit in fruits)
-        {
-            Destroy(fruit.gameObject);
-        }
+        foreach (Fruit fruit in fruits) Destroy(fruit.gameObject);
     }
 
     public bool HasStamina()
@@ -162,30 +159,22 @@ public class GameManager : MonoBehaviour
     private void UpdateStaminaUI()
     {
         if (staminaFill != null)
-        {
             staminaFill.fillAmount = CurrentStamina / maxStamina;
-        }
     }
 
     private void UpdateXPUI()
     {
         if (xpFill != null)
-        {
             xpFill.fillAmount = (float)currentXP / xpToNextLevel;
-        }
 
         if (levelText != null)
-        {
             levelText.text = "LEVEL " + currentLevel;
-        }
     }
 
     private void UpdateCoinsUI()
     {
         if (coinsText != null)
-        {
             coinsText.text = currentCoins.ToString();
-        }
     }
 
     private void StartRound()
@@ -197,10 +186,7 @@ public class GameManager : MonoBehaviour
         targetFruits = 10 + (currentRound * 2);
         int spawnCount = targetFruits + extraSpawn;
 
-        if (spawner != null)
-        {
-            spawner.StartSpawning(spawnCount);
-        }
+        if (spawner != null) spawner.StartSpawning(spawnCount);
 
         UpdateRoundUI();
     }
@@ -210,11 +196,7 @@ public class GameManager : MonoBehaviour
         if (roundText == null) return;
 
         roundText.text = currentFruits + " / " + targetFruits;
-
-        if (currentFruits >= targetFruits)
-            roundText.color = Color.green;
-        else
-            roundText.color = Color.white;
+        roundText.color = currentFruits >= targetFruits ? Color.green : Color.white;
     }
 
     public void OnSpawnFinished()
@@ -226,14 +208,8 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        if (currentFruits >= targetFruits)
-        {
-            WinRound();
-        }
-        else
-        {
-            LoseGame();
-        }
+        if (currentFruits >= targetFruits) WinRound();
+        else LoseGame();
     }
 
     private void WinRound()
@@ -279,11 +255,71 @@ public class GameManager : MonoBehaviour
         UpdateRoundUI();
     }
 
+    public void AddPenalty(int amount)
+    {
+        currentFruits = Mathf.Max(0, currentFruits - amount);
+        UpdateRoundUI();
+    }
+
+    public void BombExploded(int penalty)
+    {
+        AddPenalty(penalty);
+        PlaySliceSound();
+        StartCoroutine(BombRoutine());
+    }
+
+    private IEnumerator BombRoutine()
+    {
+        if (spawner != null) spawner.PauseSpawning();
+        ClearScene();
+
+        yield return new WaitForSeconds(bombPauseDuration);
+
+        if (spawner != null) spawner.ResumeSpawning();
+    }
+
+    public void StartFreezeEffect()
+    {
+        if (freezeRoutine != null) StopCoroutine(freezeRoutine);
+        freezeRoutine = StartCoroutine(FreezeRoutine());
+    }
+
+    private IEnumerator FreezeRoutine()
+    {
+        FrostEffect frost = Camera.main.GetComponent<FrostEffect>();
+        if (frost != null)
+        {
+            frost.enabled = true;
+            frost.FrostAmount = 0.3f;
+        }
+
+        Time.timeScale = freezeSlowScale;
+        Time.fixedDeltaTime = 0.02f * freezeSlowScale;
+
+        yield return new WaitForSecondsRealtime(freezeDuration);
+
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+
+        if (frost != null)
+        {
+            float t = 1f;
+            while (t > 0f)
+            {
+                t -= Time.unscaledDeltaTime * 2f;
+                frost.FrostAmount = Mathf.Lerp(0f, 0.3f, t);
+                yield return null;
+            }
+            frost.FrostAmount = 0f;
+            frost.enabled = false;
+        }
+
+        freezeRoutine = null;
+    }
+
     private void PlayLevelUpSound()
     {
-        if (audioSource == null) return;
-        if (levelUpSound == null) return;
-
+        if (audioSource == null || levelUpSound == null) return;
         audioSource.pitch = 1f;
         audioSource.PlayOneShot(levelUpSound, levelUpVolume);
     }
@@ -292,7 +328,6 @@ public class GameManager : MonoBehaviour
     {
         currentLevel++;
         xpToNextLevel += 25;
-
         PlayLevelUpSound();
         ShowLevelUpMessage();
     }
@@ -300,12 +335,7 @@ public class GameManager : MonoBehaviour
     private void ShowLevelUpMessage()
     {
         if (levelUpText == null) return;
-
-        if (levelUpRoutine != null)
-        {
-            StopCoroutine(levelUpRoutine);
-        }
-
+        if (levelUpRoutine != null) StopCoroutine(levelUpRoutine);
         levelUpRoutine = StartCoroutine(LevelUpMessageRoutine());
     }
 
@@ -313,9 +343,7 @@ public class GameManager : MonoBehaviour
     {
         levelUpText.gameObject.SetActive(true);
         levelUpText.text = "LEVEL UP!";
-
         yield return new WaitForSeconds(levelUpMessageDuration);
-
         levelUpText.gameObject.SetActive(false);
         levelUpRoutine = null;
     }

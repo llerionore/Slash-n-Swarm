@@ -53,9 +53,7 @@ public class Blade : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (GameManager.Instance == null || GameManager.Instance.HasStamina())
-            {
                 StartSlice();
-            }
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -71,9 +69,7 @@ public class Blade : MonoBehaviour
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (gamePlane.Raycast(ray, out float distance))
-        {
             return ray.GetPoint(distance);
-        }
         return transform.position;
     }
 
@@ -115,9 +111,7 @@ public class Blade : MonoBehaviour
         sliceCollider.enabled = velocity > minSliceVelocity;
 
         if (sliceCollider.enabled)
-        {
             CheckSlice(previousPosition, newPosition);
-        }
 
         transform.position = newPosition;
         previousPosition = newPosition;
@@ -137,7 +131,12 @@ public class Blade : MonoBehaviour
             if (fruit != null)
             {
                 fruit.Slice(dir, transform.position, sliceForce);
+                continue;
             }
+
+            Bomb bomb = hits[i].GetComponent<Bomb>();
+            if (bomb != null)
+                bomb.Slice(dir, transform.position, sliceForce);
         }
     }
 

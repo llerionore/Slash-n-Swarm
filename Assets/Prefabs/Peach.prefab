@@ -141,6 +141,12 @@ MonoBehaviour:
   juiceEffectPrefab: {fileID: 6152620863619634085, guid: 51f7bc0e100b82943ada63db02ebbd09, type: 3}
   slicedLifetime: 5
   juiceEffectLifetime: 2
+  coinReward: 5
+  canBeFrozen: 1
+  freezeChance: 0.1
+  freezeDuration: 0.5
+  slowTimeScale: 0.3
+  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
 --- !u!114 &5222723164116593264
 MonoBehaviour:
   m_ObjectHideFlags: 0

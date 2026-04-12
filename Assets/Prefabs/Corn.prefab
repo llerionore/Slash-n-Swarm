@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 170cbdae90d81804fb616d8315f0d82b, type: 3}
       propertyPath: m_Name
-      value: corn
+      value: Corn
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -129,6 +129,12 @@ MonoBehaviour:
   juiceEffectPrefab: {fileID: 6152620863619634085, guid: a7ade31da0dd9a445ad0042bed3ef593, type: 3}
   slicedLifetime: 3
   juiceEffectLifetime: 2
+  coinReward: 5
+  canBeFrozen: 0
+  freezeChance: 0.1
+  freezeDuration: 0.5
+  slowTimeScale: 0.3
+  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
 --- !u!114 &6799647471275897568
 MonoBehaviour:
   m_ObjectHideFlags: 0
