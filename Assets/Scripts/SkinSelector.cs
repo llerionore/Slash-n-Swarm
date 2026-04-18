@@ -16,7 +16,6 @@ public class SkinSelector : MonoBehaviour
             skinButtons[i].onClick.AddListener(() => SelectSkin(index));
         }
 
-        // Подсветить текущий скин
         HighlightButton(PlayerPrefs.GetInt("skin", 0));
     }
 

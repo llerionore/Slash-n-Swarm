@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Blade blade;
     [SerializeField] private Spawner spawner;
     [SerializeField] private Image staminaFill;
+    [SerializeField] private PlayerStats playerStats;
 
     [Header("XP UI")]
     [SerializeField] private Image xpFill;
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     private int spawnedFruits = 0;
     private int slicedFruits = 0;
+    private int pendingLevelUps = 0;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -60,6 +62,8 @@ public class GameManager : MonoBehaviour
 
     private float lastUseTime;
     private Coroutine levelUpRoutine;
+    public int CurrentCoins => currentCoins;
+    public int CurrentRound => currentRound;
 
     private void Awake()
     {
@@ -100,7 +104,7 @@ public class GameManager : MonoBehaviour
         if (blade != null) blade.enabled = true;
         if (spawner != null) spawner.enabled = true;
 
-        CurrentStamina = maxStamina;
+        CurrentStamina = playerStats != null ? playerStats.MaxStamina : maxStamina;
         lastUseTime = -999f;
 
         currentLevel = 1;
@@ -137,6 +141,8 @@ public class GameManager : MonoBehaviour
 
     public bool TryUseStamina(float deltaTime)
     {
+        float staminaCap = playerStats != null ? playerStats.MaxStamina : maxStamina;
+
         if (CurrentStamina <= 0f)
         {
             CurrentStamina = 0f;
@@ -144,7 +150,7 @@ public class GameManager : MonoBehaviour
         }
 
         CurrentStamina -= staminaDrainPerSecond * deltaTime;
-        CurrentStamina = Mathf.Clamp(CurrentStamina, 0f, maxStamina);
+        CurrentStamina = Mathf.Clamp(CurrentStamina, 0f, staminaCap);
 
         lastUseTime = Time.time;
         return CurrentStamina > 0f;
@@ -152,18 +158,22 @@ public class GameManager : MonoBehaviour
 
     private void RegenerateStamina()
     {
-        if (Time.time < lastUseTime + regenDelay) return;
-        if (CurrentStamina >= maxStamina) return;
+        float staminaCap = playerStats != null ? playerStats.MaxStamina : maxStamina;
+        float regenValue = playerStats != null ? playerStats.StaminaRegen : staminaRegenPerSecond;
 
-        CurrentStamina += staminaRegenPerSecond * Time.deltaTime;
-        CurrentStamina = Mathf.Clamp(CurrentStamina, 0f, maxStamina);
+        if (Time.time < lastUseTime + regenDelay) return;
+        if (CurrentStamina >= staminaCap) return;
+
+        CurrentStamina += regenValue * Time.deltaTime;
+        CurrentStamina = Mathf.Clamp(CurrentStamina, 0f, staminaCap);
     }
 
     private void UpdateStaminaUI()
     {
         if (staminaFill != null)
         {
-            staminaFill.fillAmount = CurrentStamina / maxStamina;
+            float staminaCap = playerStats != null ? playerStats.MaxStamina : maxStamina;
+            staminaFill.fillAmount = CurrentStamina / staminaCap;
         }
     }
 
@@ -186,6 +196,16 @@ public class GameManager : MonoBehaviour
         {
             coinsText.text = currentCoins.ToString();
         }
+    }
+
+    public bool TrySpendCoins(int amount)
+    {
+        if (currentCoins < amount)
+            return false;
+
+        currentCoins -= amount;
+        UpdateCoinsUI();
+        return true;
     }
 
     private void StartRound()
@@ -239,6 +259,41 @@ public class GameManager : MonoBehaviour
     private void WinRound()
     {
         currentRound++;
+
+        if (pendingLevelUps > 0)
+        {
+            Debug.Log("OPEN UPGRADE SEQUENCE. Pending = " + pendingLevelUps);
+
+            if (UpgradeManager.Instance != null)
+            {
+                UpgradeManager.Instance.StartUpgradeSequence(currentRound, pendingLevelUps);
+            }
+            else
+            {
+                Debug.LogError("UpgradeManager.Instance is NULL");
+            }
+        }
+        else
+        {
+            OpenShopAfterRound();
+        }
+    }
+
+    private void OpenShopAfterRound()
+    {
+        if (UpgradeManager.Instance != null)
+        {
+            UpgradeManager.Instance.OpenShopOnly();
+        }
+        else
+        {
+            Debug.LogError("UpgradeManager.Instance is NULL");
+        }
+    }
+
+    public void BeginNextRoundAfterShop()
+    {
+        pendingLevelUps = 0;
         StartRound();
     }
 
@@ -268,7 +323,18 @@ public class GameManager : MonoBehaviour
 
     public void AddCoins(int amount)
     {
-        currentCoins += amount;
+        float incomePercent = 0f;
+
+        if (PlayerStats.Instance != null)
+            incomePercent = PlayerStats.Instance.Income;
+
+        float multiplier = 1f + incomePercent / 100f;
+        int finalAmount = Mathf.RoundToInt(amount * multiplier);
+
+        if (finalAmount < 0)
+            finalAmount = 0;
+
+        currentCoins += finalAmount;
         UpdateCoinsUI();
     }
 
@@ -292,9 +358,12 @@ public class GameManager : MonoBehaviour
     {
         currentLevel++;
         xpToNextLevel += 25;
+        pendingLevelUps++;
 
         PlayLevelUpSound();
         ShowLevelUpMessage();
+
+        Debug.Log("LEVEL UP QUEUED. Pending = " + pendingLevelUps);
     }
 
     private void ShowLevelUpMessage()
