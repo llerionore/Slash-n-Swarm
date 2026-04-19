@@ -10,17 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c525dcbf601b2045853a2ce028e9312, type: 3}
-  m_Name: Leprechaun
+  m_Name: Dumbbell
   m_EditorClassIdentifier: 
-  itemName: Leprechaun
-  description: '+10 Income
+  itemName: Dumbbell
+  description: '+3 Strength
 
-    -3 Luck'
+    -4 Crit'
   icon: {fileID: 0}
   price: 7
   itemType: 0
-  effects:
-  - effectType: 5
-    value: 10
-  - effectType: 4
-    value: -3
+  effects: []

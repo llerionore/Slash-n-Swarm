@@ -39,7 +39,7 @@ public class ShopManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            DestroyImmediate(gameObject);
+            Destroy(gameObject);
             return;
         }
 
@@ -51,6 +51,10 @@ public class ShopManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("[ShopManager] Start");
+        Debug.Log("[ShopManager] itemPool length = " + (itemPool == null ? -1 : itemPool.Length));
+        Debug.Log("[ShopManager] shopCards length = " + (shopCards == null ? -1 : shopCards.Length));
+
         if (nextRoundButton != null)
         {
             nextRoundButton.onClick.RemoveAllListeners();
@@ -72,11 +76,15 @@ public class ShopManager : MonoBehaviour
 
     public void OpenShop(int round)
     {
+        Debug.Log("[ShopManager] OpenShop called. round = " + round);
+
         currentRound = round;
         rerollCount = 0;
 
         if (shopPanel != null)
             shopPanel.SetActive(true);
+        else
+            Debug.LogError("[ShopManager] shopPanel is NULL");
 
         Time.timeScale = 0f;
 
@@ -140,67 +148,95 @@ public class ShopManager : MonoBehaviour
 
     private void GenerateShop(bool reroll)
     {
-        if (itemPool == null || itemPool.Length == 0) return;
+        Debug.Log("[ShopManager] GenerateShop called");
+        Debug.Log("[ShopManager] itemPool null = " + (itemPool == null));
+        Debug.Log("[ShopManager] itemPool length = " + (itemPool == null ? -1 : itemPool.Length));
+        Debug.Log("[ShopManager] shopCards null = " + (shopCards == null));
+        Debug.Log("[ShopManager] shopCards length = " + (shopCards == null ? -1 : shopCards.Length));
+
+        if (itemPool == null || itemPool.Length == 0)
+        {
+            Debug.LogError("[ShopManager] itemPool is empty");
+            return;
+        }
 
         for (int i = 0; i < shopCards.Length; i++)
         {
             ShopCardUI card = shopCards[i];
-            if (card == null) continue;
+
+            if (card == null)
+            {
+                Debug.LogError("[ShopManager] shopCards[" + i + "] is NULL");
+                continue;
+            }
 
             if (reroll && card.IsLocked && card.Item != null)
                 continue;
 
             ShopItemData item = itemPool[Random.Range(0, itemPool.Length)];
+
+            if (item == null)
+            {
+                Debug.LogError("[ShopManager] selected item is NULL");
+                continue;
+            }
+
+            Debug.Log("[ShopManager] Setting card " + i + " -> " + item.itemName);
             card.Setup(item, TryBuyItem, ToggleLockCard);
         }
     }
 
     private void TryBuyItem(ShopCardUI card)
     {
-        Debug.Log("TryBuyItem called");
+        Debug.Log("[ShopManager] TryBuyItem called");
 
-        if (card == null || card.Item == null)
+        if (card == null)
         {
-            Debug.Log("Card or item is null");
+            Debug.LogError("[ShopManager] card is NULL");
             return;
         }
 
+        if (card.Item == null)
+        {
+            Debug.LogError("[ShopManager] card.Item is NULL");
+            return;
+        }
+
+        Debug.Log("[ShopManager] Buying item: " + card.Item.itemName);
+
         if (GameManager.Instance == null)
         {
-            Debug.Log("GameManager.Instance is null");
+            Debug.LogError("[ShopManager] GameManager.Instance is NULL");
             return;
         }
 
         if (PlayerInventory.Instance == null)
         {
-            Debug.Log("PlayerInventory.Instance is null");
+            Debug.LogError("[ShopManager] PlayerInventory.Instance is NULL");
             return;
         }
 
         ShopItemData item = card.Item;
-        Debug.Log("Trying to buy: " + item.itemName);
 
         if (item.itemType == ShopItemType.Active && PlayerInventory.Instance.HasActiveItem())
         {
-            Debug.Log("Active item slot already occupied");
+            Debug.LogWarning("[ShopManager] Active item slot already occupied");
             return;
         }
 
         if (!GameManager.Instance.TrySpendCoins(item.price))
         {
-            Debug.Log("Not enough coins");
+            Debug.LogWarning("[ShopManager] Not enough coins");
             return;
         }
 
         bool added = PlayerInventory.Instance.TryAddItem(item);
+        Debug.Log("[ShopManager] TryAddItem result = " + added);
+
         if (!added)
-        {
-            Debug.Log("Could not add item to inventory");
             return;
-        }
 
         ApplyItemEffects(item);
-
         card.MarkSold();
         RefreshAllUI();
     }

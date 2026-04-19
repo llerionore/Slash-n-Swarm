@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 1c525dcbf601b2045853a2ce028e9312, type: 3}
   m_Name: BookOfKnowledge
-  m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
+  m_EditorClassIdentifier: 
   itemName: Book of Knowledge
-  description: ACKCHUYALLY!!!
-  icon: {fileID: 21300000, guid: 3f59991d158a927438eff4e8a0b50912, type: 3}
+  description: Increases experience
+  icon: {fileID: 0}
   price: 8
   itemType: 1
   effects: []

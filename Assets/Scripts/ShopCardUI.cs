@@ -21,6 +21,8 @@ public class ShopCardUI : MonoBehaviour
 
     public void Setup(ShopItemData item, System.Action<ShopCardUI> buyCallback, System.Action<ShopCardUI> lockCallback)
     {
+        Debug.Log("[ShopCardUI] Setup called for " + (item != null ? item.itemName : "NULL"));
+
         currentItem = item;
         onBuy = buyCallback;
         onLock = lockCallback;
@@ -33,20 +35,30 @@ public class ShopCardUI : MonoBehaviour
 
         if (titleText != null)
             titleText.text = item.itemName;
+        else
+            Debug.LogError("[ShopCardUI] titleText is NULL");
 
         if (descriptionText != null)
             descriptionText.text = item.description;
+        else
+            Debug.LogError("[ShopCardUI] descriptionText is NULL");
 
         if (priceText != null)
             priceText.text = item.price.ToString();
+        else
+            Debug.LogError("[ShopCardUI] priceText is NULL");
 
         if (buyButton != null)
         {
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() => onBuy?.Invoke(this));
         }
+        else
+        {
+            Debug.LogError("[ShopCardUI] buyButton is NULL");
+        }
 
-        if (lockButton != null)
+            if (lockButton != null)
         {
             lockButton.onClick.RemoveAllListeners();
             lockButton.onClick.AddListener(() => onLock?.Invoke(this));

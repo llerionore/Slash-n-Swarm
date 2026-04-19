@@ -137,7 +137,12 @@ public class Blade : MonoBehaviour
             if (fruit != null)
             {
                 fruit.Slice(dir, transform.position, sliceForce);
+                continue;
             }
+
+            Bomb bomb = hits[i].GetComponent<Bomb>();
+            if (bomb != null)
+                bomb.Slice(dir, transform.position, sliceForce);
         }
     }
 

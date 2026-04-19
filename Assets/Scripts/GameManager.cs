@@ -19,6 +19,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI levelUpText;
 
+    [Header("Bomb")]
+    [SerializeField] private float bombPauseDuration = 2f;
+
+    [Header("Freeze")]
+    [SerializeField] private float freezeDuration = 1.5f;
+    [SerializeField] private float freezeSlowScale = 0.3f;
+
     [Header("Stamina")]
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float staminaDrainPerSecond = 35f;
@@ -62,6 +69,9 @@ public class GameManager : MonoBehaviour
 
     private float lastUseTime;
     private Coroutine levelUpRoutine;
+    private Coroutine bombRoutine;
+    private bool bombInProgress = false;
+    private Coroutine freezeRoutine;
     public int CurrentCoins => currentCoins;
     public int CurrentRound => currentRound;
 
@@ -69,7 +79,7 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            DestroyImmediate(gameObject);
+            Destroy(gameObject);
             return;
         }
 
@@ -388,6 +398,80 @@ public class GameManager : MonoBehaviour
         levelUpText.gameObject.SetActive(false);
         levelUpRoutine = null;
     }
+
+    public void AddPenalty(int amount)
+    {
+        currentFruits = Mathf.Max(0, currentFruits - amount);
+        UpdateRoundUI();
+    }
+
+    private IEnumerator BombRoutine()
+    {
+        if (spawner != null) spawner.PauseSpawning();
+        ClearScene();
+
+        yield return new WaitForSeconds(bombPauseDuration);
+
+        if (spawner != null) spawner.ResumeSpawning();
+
+        bombRoutine = null;
+        bombInProgress = false;
+    }
+
+    public void BombExploded(int penalty)
+    {
+        if (bombInProgress) return;
+
+        bombInProgress = true;
+
+        AddPenalty(penalty);
+        PlaySliceSound();
+
+        if (bombRoutine != null)
+            StopCoroutine(bombRoutine);
+
+        bombRoutine = StartCoroutine(BombRoutine());
+    }
+
+    public void StartFreezeEffect()
+    {
+        if (freezeRoutine != null) StopCoroutine(freezeRoutine);
+        freezeRoutine = StartCoroutine(FreezeRoutine());
+    }
+
+    private IEnumerator FreezeRoutine()
+    {
+        FrostEffect frost = Camera.main.GetComponent<FrostEffect>();
+        if (frost != null)
+        {
+            frost.enabled = true;
+            frost.FrostAmount = 0.3f;
+        }
+
+        Time.timeScale = freezeSlowScale;
+        Time.fixedDeltaTime = 0.02f * freezeSlowScale;
+
+        yield return new WaitForSecondsRealtime(freezeDuration);
+
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+
+        if (frost != null)
+        {
+            float t = 1f;
+            while (t > 0f)
+            {
+                t -= Time.unscaledDeltaTime * 2f;
+                frost.FrostAmount = Mathf.Lerp(0f, 0.3f, t);
+                yield return null;
+            }
+            frost.FrostAmount = 0f;
+            frost.enabled = false;
+        }
+
+        freezeRoutine = null;
+    }
+
 
     public void PlaySliceSound()
     {
