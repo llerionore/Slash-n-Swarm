@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 9044ef733a99ffa4aa7a986bb5e9a7f3
 MonoImporter:
   externalObjects: {}
@@ -7,6 +8,13 @@ MonoImporter:
   - Frost: {fileID: 2800000, guid: 210743b88c99bcf45b28c3a4a4a3e178, type: 3}
   - FrostNormals: {fileID: 2800000, guid: 065247d136abaa042a330ab6a7b030fc, type: 3}
   - Shader: {fileID: 4800000, guid: db8aebe950ae3794aae5ed890f38549b, type: 3}
+=======
+guid: 4f51615343c3cc64d81708b9876f43af
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

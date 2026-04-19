@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 065247d136abaa042a330ab6a7b030fc
+=======
+guid: ef338f225bf34f84f92c84216b4f0227
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -7,8 +11,13 @@ TextureImporter:
   mipmaps:
     mipMapMode: 0
     enableMipMap: 1
+<<<<<<< HEAD
     sRGBTexture: 0
     linearTexture: 1
+=======
+    sRGBTexture: 1
+    linearTexture: 0
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
     fadeOut: 0
     borderMipMap: 0
     mipMapsPreserveCoverage: 0
@@ -16,10 +25,17 @@ TextureImporter:
     mipMapFadeDistanceStart: 1
     mipMapFadeDistanceEnd: 3
   bumpmap:
+<<<<<<< HEAD
     convertToNormalMap: 1
     externalNormalMap: 1
     heightScale: 0.05
     normalMapFilter: 1
+=======
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
     flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
@@ -30,11 +46,19 @@ TextureImporter:
   generateCubemap: 6
   cubemapConvolution: 0
   seamlessCubemap: 0
+<<<<<<< HEAD
   textureFormat: -1
   maxTextureSize: 1024
   textureSettings:
     serializedVersion: 2
     filterMode: 2
+=======
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
     aniso: 1
     mipBias: 0
     wrapU: 0
@@ -54,7 +78,11 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
+<<<<<<< HEAD
   textureType: 1
+=======
+  textureType: 0
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -63,6 +91,7 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   ignorePngGamma: 0
+<<<<<<< HEAD
   applyGammaDecoding: 1
   swizzle: 50462976
   cookieLightType: 1
@@ -70,6 +99,15 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
+=======
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -82,7 +120,24 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+<<<<<<< HEAD
     maxTextureSize: 1024
+=======
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+>>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1

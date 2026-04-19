@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coconut
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: baf0f7310f6aa5842a45fad9de0a54c8, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -129,6 +133,7 @@ MonoBehaviour:
   juiceEffectPrefab: {fileID: 8656481818326495124, guid: 33394e8e2ba4f3548b6438a6d716db0b, type: 3}
   slicedLifetime: 3
   juiceEffectLifetime: 2
+  coinReward: 5
 --- !u!114 &5870069267049139010
 MonoBehaviour:
   m_ObjectHideFlags: 0

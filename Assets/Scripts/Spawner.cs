@@ -46,6 +46,40 @@ public class Spawner : MonoBehaviour
         spawnRoutine = null;
     }
 
+    public void PauseSpawning()
+    {
+        if (spawnRoutine != null)
+        {
+            StopCoroutine(spawnRoutine);
+            spawnRoutine = null;
+        }
+    }
+
+    public void ResumeSpawning()
+    {
+        if (fruitsToSpawn - spawnedCount > 0)
+        {
+            spawnRoutine = StartCoroutine(SpawnRoutine(true));
+        }
+    }
+
+    private IEnumerator SpawnRoutine(bool skipDelay = false)
+    {
+        if (!skipDelay) yield return new WaitForSeconds(1f);
+
+        while (spawnedCount < fruitsToSpawn)
+        {
+            SpawnFruit();
+            spawnedCount++;
+            float delay = Random.Range(minSpawnDelay, maxSpawnDelay) / spawnSpeedMultiplier;
+            yield return new WaitForSeconds(delay);
+        }
+
+        spawnRoutine = null;
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnSpawnFinished();
+    }
+
     public void StartSpawning(int count)
     {
         fruitsToSpawn = count;
