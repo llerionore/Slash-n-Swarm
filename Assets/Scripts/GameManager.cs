@@ -30,9 +30,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int xpToNextLevel = 100;
     [SerializeField] private int xpPerFruit = 20;
 
+    [Header("XP Multiplier")]
+    [SerializeField] private float xpMultiplier = 1f;
+
     [Header("Currency")]
     [SerializeField] private int currentCoins = 0;
     [SerializeField] private TextMeshProUGUI coinsText;
+
+    [Header("Gold Multiplier")]
+    [SerializeField] private float goldMultiplier = 1f;
+
+    [Header("Armor Reduction")]
+    [SerializeField] private int armorReductionLevel = 0;
 
     [Header("Level Up Message")]
     [SerializeField] private float levelUpMessageDuration = 1.5f;
@@ -51,8 +60,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float freezeDuration = 1.5f;
     [SerializeField] private float freezeSlowScale = 0.3f;
 
-    private int spawnedFruits = 0;
     private int slicedFruits = 0;
+    private bool infiniteStamina = false;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -106,6 +115,10 @@ public class GameManager : MonoBehaviour
 
         CurrentStamina = maxStamina;
         lastUseTime = -999f;
+        infiniteStamina = false;
+        xpMultiplier = 1f;
+        goldMultiplier = 1f;
+        // armorReductionLevel не сбрасываем — постоянное улучшение
 
         currentLevel = 1;
         currentXP = 0;
@@ -129,11 +142,14 @@ public class GameManager : MonoBehaviour
 
     public bool HasStamina()
     {
+        if (infiniteStamina) return true;
         return CurrentStamina > 0f;
     }
 
     public bool TryUseStamina(float deltaTime)
     {
+        if (infiniteStamina) return true;
+
         if (CurrentStamina <= 0f)
         {
             CurrentStamina = 0f;
@@ -147,8 +163,35 @@ public class GameManager : MonoBehaviour
         return CurrentStamina > 0f;
     }
 
+    public void SetInfiniteStamina(bool value)
+    {
+        infiniteStamina = value;
+        if (value) CurrentStamina = maxStamina;
+    }
+
+    public void SetXPMultiplier(float multiplier)
+    {
+        xpMultiplier = multiplier;
+    }
+
+    public void SetGoldMultiplier(float multiplier)
+    {
+        goldMultiplier = multiplier;
+    }
+
+    public void UpgradeArmorReduction()
+    {
+        armorReductionLevel++;
+    }
+
+    public int GetArmorReduction()
+    {
+        return armorReductionLevel;
+    }
+
     private void RegenerateStamina()
     {
+        if (infiniteStamina) return;
         if (Time.time < lastUseTime + regenDelay) return;
         if (CurrentStamina >= maxStamina) return;
 
@@ -181,7 +224,6 @@ public class GameManager : MonoBehaviour
     {
         currentFruits = 0;
         slicedFruits = 0;
-        spawnedFruits = 0;
 
         targetFruits = 10 + (currentRound * 2);
         int spawnCount = targetFruits + extraSpawn;
@@ -239,13 +281,18 @@ public class GameManager : MonoBehaviour
 
     public void AddFruitXP()
     {
-        AddXP(xpPerFruit);
+        AddXP(Mathf.RoundToInt(xpPerFruit * xpMultiplier));
     }
 
     public void AddCoins(int amount)
     {
         currentCoins += amount;
         UpdateCoinsUI();
+    }
+
+    public void AddFruitCoins(int amount)
+    {
+        AddCoins(Mathf.RoundToInt(amount * goldMultiplier));
     }
 
     public void OnFruitSliced()

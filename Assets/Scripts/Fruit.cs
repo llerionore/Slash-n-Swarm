@@ -58,7 +58,7 @@ public class Fruit : MonoBehaviour
         {
             GameManager.Instance.PlaySliceSound();
             GameManager.Instance.AddFruitXP();
-            GameManager.Instance.AddCoins(coinReward);
+            GameManager.Instance.AddFruitCoins(coinReward);
         }
 
         if (juiceEffectPrefab != null)

@@ -88,6 +88,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   penaltyFruits: 3
   explosionEffect: {fileID: 6515103751123067363, guid: 44b030189bd928343beaf8fd43159f4b, type: 3}
+  explosionSound: {fileID: 8300000, guid: 0187dd9aaadb158428481de0bceb5ec6, type: 3}
+  explosionVolume: 1
 --- !u!54 &3519689146577254081
 Rigidbody:
   m_ObjectHideFlags: 0

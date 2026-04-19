@@ -9,6 +9,11 @@ public class Spawner : MonoBehaviour
     [Header("Prefabs")]
     public GameObject[] fruitPrefabs;
 
+    [Header("Coins")]
+    public GameObject coinPrefab;
+    [Range(0f, 1f)]
+    public float coinSpawnChance = 0.1f;
+
     [Header("Spawn Timing")]
     public float minSpawnDelay = 0.25f;
     public float maxSpawnDelay = 1f;
@@ -66,9 +71,7 @@ public class Spawner : MonoBehaviour
     public void ResumeSpawning()
     {
         if (fruitsToSpawn - spawnedCount > 0)
-        {
             spawnRoutine = StartCoroutine(SpawnRoutine(true));
-        }
     }
 
     private IEnumerator SpawnRoutine(bool skipDelay = false)
@@ -79,6 +82,7 @@ public class Spawner : MonoBehaviour
         {
             SpawnFruit();
             spawnedCount++;
+
             float delay = Random.Range(minSpawnDelay, maxSpawnDelay) / spawnSpeedMultiplier;
             yield return new WaitForSeconds(delay);
         }
@@ -116,6 +120,24 @@ public class Spawner : MonoBehaviour
                 Random.Range(minTorque.z, maxTorque.z)
             );
             rb.AddTorque(randomTorque, ForceMode.Impulse);
+        }
+
+        // Спавн монеты с шансом
+        if (coinPrefab != null && Random.value < coinSpawnChance)
+        {
+            Vector3 coinPosition = new Vector3(
+                Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
+                Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y),
+                0f
+            );
+            Quaternion coinRotation = Quaternion.Euler(0f, 0f, Random.Range(minAngle, maxAngle));
+            GameObject coin = Instantiate(coinPrefab, coinPosition, coinRotation);
+            Rigidbody coinRb = coin.GetComponent<Rigidbody>();
+            if (coinRb != null)
+            {
+                float force = Random.Range(minForce, maxForce);
+                coinRb.AddForce(coin.transform.up * force, ForceMode.Impulse);
+            }
         }
     }
 }

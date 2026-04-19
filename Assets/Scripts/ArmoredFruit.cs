@@ -27,18 +27,28 @@ public class ArmoredFruit : Fruit
     {
         if (hasBeenSliced) return;
 
+        int requiredHits = hitsRequired;
+        if (GameManager.Instance != null)
+            requiredHits = Mathf.Max(1, hitsRequired - GameManager.Instance.GetArmorReduction());
+
         if (Time.time - lastHitTime < hitDelay) return;
         lastHitTime = Time.time;
 
         hitCount++;
 
-        if (hitCount < hitsRequired)
+        if (hitCount < requiredHits)
         {
             ShowCrack(hitCount - 1);
             if (hitSound != null) audioSource.PlayOneShot(hitSound);
             return;
         }
 
+        base.Slice(direction, position, force);
+    }
+
+    public void ForceSlice(Vector3 direction, Vector3 position, float force)
+    {
+        hitCount = hitsRequired;
         base.Slice(direction, position, force);
     }
 
