@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldReward: 15
-  rotationSpeed: 180
+  rotationSpeed: 190
   collectEffect: {fileID: 0}
   effectLifetime: 1
   collectSound: {fileID: 8300000, guid: eb1ca880778712b4ca4f2971362ff1dd, type: 3}
