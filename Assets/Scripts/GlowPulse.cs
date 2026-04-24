@@ -13,7 +13,7 @@ public class GlowPulse : MonoBehaviour
     private void Awake()
     {
         if (glowRenderer != null)
-            mat = glowRenderer.material;
+            mat = glowRenderer.sharedMaterial;
     }
 
     private void Update()

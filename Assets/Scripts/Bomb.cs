@@ -6,6 +6,10 @@ public class Bomb : MonoBehaviour
     [SerializeField] private int penaltyFruits = 3;
     [SerializeField] private ParticleSystem explosionEffect;
 
+    [Header("Sound")]
+    [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private float explosionVolume = 1f;
+
     private bool hasBeenSliced = false;
     private Collider[] bombColliders;
     private Rigidbody rb;
@@ -21,7 +25,6 @@ public class Bomb : MonoBehaviour
         if (hasBeenSliced) return;
         hasBeenSliced = true;
 
-        // Сразу отключаем все коллайдеры, чтобы клинок не задел повторно
         if (bombColliders != null)
         {
             for (int i = 0; i < bombColliders.Length; i++)
@@ -31,7 +34,6 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        // Останавливаем физику
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
@@ -39,19 +41,20 @@ public class Bomb : MonoBehaviour
             rb.isKinematic = true;
         }
 
+        if (explosionSound != null)
+            AudioSource.PlayClipAtPoint(explosionSound, transform.position, explosionVolume);
+
         if (explosionEffect != null)
         {
+            // Спавним только один эффект
             ParticleSystem effect = Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            effect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             effect.Play();
-
-            float lifetime = effect.main.duration + effect.main.startLifetime.constantMax;
-            Destroy(effect.gameObject, lifetime);
+            Destroy(effect.gameObject, effect.main.duration);
         }
 
         if (GameManager.Instance != null)
-        {
             GameManager.Instance.BombExploded(penaltyFruits);
-        }
 
         Destroy(gameObject);
     }

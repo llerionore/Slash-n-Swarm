@@ -14,6 +14,11 @@ public class Spawner : MonoBehaviour
     [Range(0f, 1f)]
     public float coinSpawnChance = 0.1f;
 
+    [Header("Pineapple")]
+    public GameObject pineapplePrefab;
+    [Range(0f, 1f)]
+    public float pineappleSpawnChance = 0.05f;
+
     [Header("Spawn Timing")]
     public float minSpawnDelay = 0.25f;
     public float maxSpawnDelay = 1f;
@@ -97,31 +102,18 @@ public class Spawner : MonoBehaviour
         if (fruitPrefabs == null || fruitPrefabs.Length == 0) return;
         if (spawnArea == null) return;
 
-        GameObject prefab = fruitPrefabs[Random.Range(0, fruitPrefabs.Length)];
-
-        Vector3 position = new Vector3(
-            Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
-            Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y),
-            0f
-        );
-
-        Quaternion rotation = Quaternion.Euler(0f, 0f, Random.Range(minAngle, maxAngle));
-        GameObject fruit = Instantiate(prefab, position, rotation);
-
-        Rigidbody rb = fruit.GetComponent<Rigidbody>();
-        if (rb != null)
+        // Шанс заспавнить ананас
+        if (pineapplePrefab != null && Random.value < pineappleSpawnChance)
         {
-            float force = Random.Range(minForce, maxForce);
-            rb.AddForce(fruit.transform.up * force, ForceMode.Impulse);
-
-            Vector3 randomTorque = new Vector3(
-                Random.Range(minTorque.x, maxTorque.x),
-                Random.Range(minTorque.y, maxTorque.y),
-                Random.Range(minTorque.z, maxTorque.z)
-            );
-            rb.AddTorque(randomTorque, ForceMode.Impulse);
+            SpawnObject(pineapplePrefab);
+            return;
         }
 
+        // Обычный фрукт
+        GameObject prefab = fruitPrefabs[Random.Range(0, fruitPrefabs.Length)];
+        SpawnObject(prefab);
+
+        // Шанс заспавнить монету
         if (coinPrefab != null && Random.value < coinSpawnChance)
         {
             Vector3 coinPosition = new Vector3(
@@ -137,6 +129,32 @@ public class Spawner : MonoBehaviour
                 float force = Random.Range(minForce, maxForce);
                 coinRb.AddForce(coin.transform.up * force, ForceMode.Impulse);
             }
+        }
+    }
+
+    private void SpawnObject(GameObject prefab)
+    {
+        Vector3 position = new Vector3(
+            Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
+            Random.Range(spawnArea.bounds.min.y, spawnArea.bounds.max.y),
+            0f
+        );
+
+        Quaternion rotation = Quaternion.Euler(0f, 0f, Random.Range(minAngle, maxAngle));
+        GameObject obj = Instantiate(prefab, position, rotation);
+
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            float force = Random.Range(minForce, maxForce);
+            rb.AddForce(obj.transform.up * force, ForceMode.Impulse);
+
+            Vector3 randomTorque = new Vector3(
+                Random.Range(minTorque.x, maxTorque.x),
+                Random.Range(minTorque.y, maxTorque.y),
+                Random.Range(minTorque.z, maxTorque.z)
+            );
+            rb.AddTorque(randomTorque, ForceMode.Impulse);
         }
     }
 }

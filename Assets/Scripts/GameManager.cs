@@ -84,6 +84,9 @@ public class GameManager : MonoBehaviour
     private bool bombInProgress = false;
     private Coroutine freezeRoutine;
 
+    private Vector3 defaultCameraPos;
+    private float defaultCameraSize;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -101,6 +104,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        defaultCameraPos = Camera.main.transform.position;
+        defaultCameraSize = Camera.main.orthographicSize;
         NewGame();
     }
 
@@ -194,6 +199,37 @@ public class GameManager : MonoBehaviour
     public int GetArmorReduction()
     {
         return armorReductionLevel;
+    }
+
+    public Spawner GetSpawner()
+    {
+        return spawner;
+    }
+
+    public void ReturnCamera(float speed)
+    {
+        StartCoroutine(ReturnCameraRoutine(defaultCameraPos, defaultCameraSize, speed));
+    }
+
+    private IEnumerator ReturnCameraRoutine(Vector3 originalPos, float originalSize, float speed)
+    {
+        Camera cam = Camera.main;
+        float t = 0f;
+        Vector3 currentPos = cam.transform.position;
+        float currentSize = cam.orthographicSize;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * speed;
+            cam.orthographicSize = Mathf.Lerp(currentSize, originalSize, t);
+            cam.transform.position = Vector3.Lerp(currentPos, originalPos, t);
+            yield return null;
+        }
+
+        cam.orthographicSize = originalSize;
+        cam.transform.position = originalPos;
+
+        if (spawner != null) spawner.ResumeSpawning();
     }
 
     private void RegenerateStamina()
@@ -467,5 +503,65 @@ public class GameManager : MonoBehaviour
         AudioClip clip = sliceSounds[Random.Range(0, sliceSounds.Length)];
         audioSource.pitch = Random.Range(minSlicePitch, maxSlicePitch);
         audioSource.PlayOneShot(clip, sliceVolume);
+    }
+
+    public void ReturnPineappleCamera(Camera pineappleCamera, Image darkOverlay, Image spotlightCircle, Vector3 originalPos, float originalSize, float speed)
+    {
+        StartCoroutine(ReturnPineapleCameraRoutine(pineappleCamera, darkOverlay, spotlightCircle, originalPos, originalSize, speed));
+    }
+
+    private IEnumerator ReturnPineapleCameraRoutine(Camera pineappleCam, Image overlay, Image spotlight, Vector3 originalPos, float originalSize, float speed)
+    {
+        Camera main = Camera.main;
+        float t = 0f;
+        Vector3 startPos = pineappleCam.transform.position;
+        float startSize = pineappleCam.orthographicSize;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * speed;
+            pineappleCam.orthographicSize = Mathf.Lerp(startSize, originalSize, t);
+            pineappleCam.transform.position = Vector3.Lerp(startPos, originalPos, t);
+
+            if (overlay != null)
+            {
+                Color c = overlay.color;
+                c.a = Mathf.Lerp(0.85f, 0f, t);
+                overlay.color = c;
+            }
+
+            if (spotlight != null)
+            {
+                Color c = spotlight.color;
+                c.a = Mathf.Lerp(1f, 0f, t);
+                spotlight.color = c;
+            }
+
+            yield return null;
+        }
+
+        pineappleCam.orthographicSize = originalSize;
+        pineappleCam.transform.position = originalPos;
+        pineappleCam.gameObject.SetActive(false);
+
+        if (overlay != null)
+        {
+            Color c = overlay.color;
+            c.a = 0f;
+            overlay.color = c;
+            overlay.gameObject.SetActive(false);
+        }
+
+        if (spotlight != null)
+        {
+            Color c = spotlight.color;
+            c.a = 0f;
+            spotlight.color = c;
+            spotlight.gameObject.SetActive(false);
+        }
+
+        main.depth = -1;
+
+        if (spawner != null) spawner.ResumeSpawning();
     }
 }

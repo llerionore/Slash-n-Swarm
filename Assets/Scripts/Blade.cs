@@ -65,9 +65,21 @@ public class Blade : MonoBehaviour
         }
     }
 
+    private Camera GetActiveCamera()
+    {
+        Camera[] allCams = Camera.allCameras;
+        foreach (Camera cam in allCams)
+        {
+            if (cam.isActiveAndEnabled && cam.depth >= 0)
+                return cam;
+        }
+        return Camera.main;
+    }
+
     private Vector3 GetMouseWorldPosition()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        Camera activeCam = GetActiveCamera();
+        Ray ray = activeCam.ScreenPointToRay(Input.mousePosition);
         if (gamePlane.Raycast(ray, out float distance))
             return ray.GetPoint(distance);
         return transform.position;
