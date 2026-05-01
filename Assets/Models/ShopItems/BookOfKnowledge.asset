@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: BookOfKnowledge
   m_EditorClassIdentifier: 
   itemName: Book of Knowledge
-  description: Increases experience
-  icon: {fileID: 0}
-  price: 8
+  description: Increases experience for 1 round
+  icon: {fileID: -1507860457, guid: 667852dfc8029da40aee2149d34babc4, type: 3}
+  iconAnimator: {fileID: 9100000, guid: e247b98fcf4f3fa4ead96cf650767492, type: 2}
+  price: 15
   itemType: 1
   effects: []

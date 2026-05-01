@@ -15,7 +15,8 @@ public enum ShopEffectType
     CritChance,
     Luck,
     Income,
-    Experience
+    Experience,
+    StaminaSteal
 }
 
 [System.Serializable]
@@ -32,6 +33,7 @@ public class ShopItemData : ScriptableObject
     public string itemName;
     [TextArea] public string description;
     public Sprite icon;
+    public RuntimeAnimatorController iconAnimator;
     public int price = 5;
     public ShopItemType itemType = ShopItemType.Passive;
 

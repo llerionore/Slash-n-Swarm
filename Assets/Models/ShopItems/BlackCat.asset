@@ -16,8 +16,9 @@ MonoBehaviour:
   description: '-2 Luck
 
     +2 Strength'
-  icon: {fileID: 0}
-  price: 6
+  icon: {fileID: -4257346, guid: f901bdeb20ea8b04bb15a6de05d40395, type: 3}
+  iconAnimator: {fileID: 9100000, guid: d0748fe3801bcee4eac0fed1bd63cab1, type: 2}
+  price: 16
   itemType: 0
   effects:
   - effectType: 4

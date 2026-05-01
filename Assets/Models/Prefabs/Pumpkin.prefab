@@ -168,14 +168,15 @@ MonoBehaviour:
   juiceEffectPrefab: {fileID: 6152620863619634085, guid: 6891b936fce29864a92733e788ce2bbc, type: 3}
   slicedLifetime: 3
   juiceEffectLifetime: 3
-  coinReward: 5
+  coinReward: 6
+  xpReward: 19
   canBeFrozen: 1
   freezeChance: 0.08
   frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
-  hitsRequired: 3
+  armorHP: 4
   hitDelay: 0.3
   crackMaterials:
   - {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
   - {fileID: 2100000, guid: 881d164e2d37dbc42821d8c3b2dd396b, type: 2}
   fruitRenderer: {fileID: 6430460177412520525}
-  hitSound: {fileID: 8300000, guid: 6ce37ca6c84991c49bf1fdc959a047e6, type: 3}
+  hitSound: {fileID: 8300000, guid: e9fa41b73ac511949bbf650abacd77d5, type: 3}

@@ -16,7 +16,10 @@ public static class UpgradeGenerator
 
     private static UpgradeRarity RollRarity(int round)
     {
-        float roll = Random.Range(0f, 100f);
+        float luck = 0f;
+
+        if (PlayerStats.Instance != null)
+            luck = PlayerStats.Instance.GetLuckRarityBonus();
 
         float common = 60f;
         float rare = 25f;
@@ -45,21 +48,39 @@ public static class UpgradeGenerator
         if (round >= 10)
         {
             common -= 10f;
-            rare += 0f;
             epic += 3f;
             legendary += 4f;
             mythic += 3f;
         }
 
-        float border1 = common;
-        float border2 = border1 + rare;
-        float border3 = border2 + epic;
-        float border4 = border3 + legendary;
+        float luckPower = Mathf.Clamp(luck, 0f, 50f);
 
-        if (roll < border1) return UpgradeRarity.Common;
-        if (roll < border2) return UpgradeRarity.Rare;
-        if (roll < border3) return UpgradeRarity.Epic;
-        if (roll < border4) return UpgradeRarity.Legendary;
+        common -= luckPower * 0.6f;
+        rare -= luckPower * 0.2f;
+        epic += luckPower * 0.35f;
+        legendary += luckPower * 0.3f;
+        mythic += luckPower * 0.15f;
+
+        common = Mathf.Max(5f, common);
+        rare = Mathf.Max(5f, rare);
+        epic = Mathf.Max(1f, epic);
+        legendary = Mathf.Max(0.5f, legendary);
+        mythic = Mathf.Max(0.2f, mythic);
+
+        float total = common + rare + epic + legendary + mythic;
+        float roll = Random.Range(0f, total);
+
+        if (roll < common) return UpgradeRarity.Common;
+        roll -= common;
+
+        if (roll < rare) return UpgradeRarity.Rare;
+        roll -= rare;
+
+        if (roll < epic) return UpgradeRarity.Epic;
+        roll -= epic;
+
+        if (roll < legendary) return UpgradeRarity.Legendary;
+
         return UpgradeRarity.Mythic;
     }
 
@@ -71,7 +92,10 @@ public static class UpgradeGenerator
             UpgradeType.MaxStamina,
             UpgradeType.StaminaRegen,
             UpgradeType.CritChance,
-            UpgradeType.Luck
+            UpgradeType.Luck,
+            UpgradeType.Income,
+            UpgradeType.Experience,
+            UpgradeType.StaminaSteal
         };
 
         if (excludedTypes != null)
@@ -111,11 +135,11 @@ public static class UpgradeGenerator
             case UpgradeType.StaminaRegen:
                 switch (rarity)
                 {
-                    case UpgradeRarity.Common: return 2f;
-                    case UpgradeRarity.Rare: return 4f;
-                    case UpgradeRarity.Epic: return 6f;
-                    case UpgradeRarity.Legendary: return 8f;
-                    case UpgradeRarity.Mythic: return 12f;
+                    case UpgradeRarity.Common: return 1f;
+                    case UpgradeRarity.Rare: return 2f;
+                    case UpgradeRarity.Epic: return 4f;
+                    case UpgradeRarity.Legendary: return 6f;
+                    case UpgradeRarity.Mythic: return 10f;
                 }
                 break;
 
@@ -138,6 +162,39 @@ public static class UpgradeGenerator
                     case UpgradeRarity.Epic: return 4f;
                     case UpgradeRarity.Legendary: return 6f;
                     case UpgradeRarity.Mythic: return 8f;
+                }
+                break;
+
+            case UpgradeType.Income:
+                switch (rarity)
+                {
+                    case UpgradeRarity.Common: return 5f;
+                    case UpgradeRarity.Rare: return 8f;
+                    case UpgradeRarity.Epic: return 12f;
+                    case UpgradeRarity.Legendary: return 18f;
+                    case UpgradeRarity.Mythic: return 25f;
+                }
+                break;
+
+            case UpgradeType.Experience:
+                switch (rarity)
+                {
+                    case UpgradeRarity.Common: return 5f;
+                    case UpgradeRarity.Rare: return 8f;
+                    case UpgradeRarity.Epic: return 12f;
+                    case UpgradeRarity.Legendary: return 18f;
+                    case UpgradeRarity.Mythic: return 25f;
+                }
+                break;
+
+            case UpgradeType.StaminaSteal:
+                switch (rarity)
+                {
+                    case UpgradeRarity.Common: return 2f;
+                    case UpgradeRarity.Rare: return 4f;
+                    case UpgradeRarity.Epic: return 6f;
+                    case UpgradeRarity.Legendary: return 8f;
+                    case UpgradeRarity.Mythic: return 12f;
                 }
                 break;
         }

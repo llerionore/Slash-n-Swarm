@@ -5,15 +5,28 @@ using UnityEngine.UI;
 
 public class UpgradeCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+
+    [System.Serializable]
+    public class UpgradeVisual
+    {
+        public UpgradeType type;
+        public Sprite icon;
+        public RuntimeAnimatorController animatorController;
+    }
+
     [Header("UI")]
-    [SerializeField] private Image cardBackground;          // сам корень карточки
-    [SerializeField] private Image cardTitleBackground;     // верхн€€ лента CardTitle
-    [SerializeField] private Image itemFrame;               // центральна€ рамка
-    [SerializeField] private TextMeshProUGUI titleText;     // TitleText
-    [SerializeField] private TextMeshProUGUI descriptionText; // DescriptionText
+    [SerializeField] private Image cardBackground;          
+    [SerializeField] private Image cardTitleBackground;     
+    [SerializeField] private Image itemFrame;               
+    [SerializeField] private TextMeshProUGUI titleText;     
+    [SerializeField] private TextMeshProUGUI descriptionText; 
 
     [Header("Hover")]
     [SerializeField] private Vector3 hoverScale = new Vector3(1.05f, 1.05f, 1f);
+
+    [SerializeField] private Image upgradeIconImage;
+    [SerializeField] private Animator upgradeIconAnimator;
+    [SerializeField] private UpgradeVisual[] upgradeVisuals;
 
     private Vector3 originalScale;
     private Color baseCardColor;
@@ -47,6 +60,8 @@ public class UpgradeCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         if (descriptionText != null)
             descriptionText.text = GetDescription(data);
+
+        SetupIcon(data.type);
 
         Color rarityColor = GetColorByRarity(data.rarity);
 
@@ -107,6 +122,9 @@ public class UpgradeCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             case UpgradeType.StaminaRegen: return "Stamina Regen";
             case UpgradeType.CritChance: return "Crit Chance";
             case UpgradeType.Luck: return "Luck";
+            case UpgradeType.Income: return "Income";
+            case UpgradeType.Experience: return "Experience";
+            case UpgradeType.StaminaSteal: return "Stamina Steal";
             default: return "Upgrade";
         }
     }
@@ -125,6 +143,12 @@ public class UpgradeCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 return "+" + data.value + "% Crit Chance";
             case UpgradeType.Luck:
                 return "+" + data.value + " Luck";
+            case UpgradeType.Income:
+                return "+" + data.value + "% Income";
+            case UpgradeType.Experience:
+                return "+" + data.value + "% Experience";
+            case UpgradeType.StaminaSteal:
+                return "+" + data.value + "% Stamina Steal";
             default:
                 return "+" + data.value;
         }
@@ -146,6 +170,43 @@ public class UpgradeCardUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 return new Color(0.35f, 1f, 0.9f);
             default:
                 return Color.white;
+        }
+    }
+
+    private void SetupIcon(UpgradeType type)
+    {
+        UpgradeVisual visual = null;
+
+        foreach (UpgradeVisual v in upgradeVisuals)
+        {
+            if (v.type == type)
+            {
+                visual = v;
+                break;
+            }
+        }
+
+        if (upgradeIconImage != null)
+        {
+            upgradeIconImage.sprite = visual != null ? visual.icon : null;
+            upgradeIconImage.enabled = visual != null && visual.icon != null;
+        }
+
+        if (upgradeIconAnimator != null)
+        {
+            upgradeIconAnimator.runtimeAnimatorController =
+                visual != null ? visual.animatorController : null;
+
+            upgradeIconAnimator.enabled =
+                visual != null && visual.animatorController != null;
+
+            if (upgradeIconAnimator.enabled)
+            {
+                upgradeIconAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+                upgradeIconAnimator.Rebind();
+                upgradeIconAnimator.Update(0f);
+                upgradeIconAnimator.Play(0, 0, 0f);
+            }
         }
     }
 }

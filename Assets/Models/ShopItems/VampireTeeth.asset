@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c525dcbf601b2045853a2ce028e9312, type: 3}
+  m_Name: VampireTeeth
+  m_EditorClassIdentifier: 
+  itemName: VampireTeeth
+  description: '+7 St. Steal
+
+    -5 St. Regen'
+  icon: {fileID: 21300000, guid: 821e9e102380f6d4cbd8a58d193e5879, type: 3}
+  iconAnimator: {fileID: 9100000, guid: 6ab18b9ecd51c9e4db1ac349dedbd420, type: 2}
+  price: 5
+  itemType: 0
+  effects:
+  - effectType: 7
+    value: 7
+  - effectType: 2
+    value: -5

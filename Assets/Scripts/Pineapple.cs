@@ -75,7 +75,21 @@ public class Pineapple : Fruit
         }
 
         if (GameManager.Instance != null)
+        {
+            GameManager.Instance.PlaySliceSound();
             GameManager.Instance.AddCoins(coinsPerSlice);
+        }
+
+        if (!isActive && !hasBeenSliced)
+        {
+            if (GameManager.Instance != null)
+                GameManager.Instance.PlaySliceSound();
+
+            isActive = true;
+            hasBeenSliced = true;
+            StartCoroutine(PineappleRoutine());
+            return;
+        }
     }
 
     private IEnumerator PineappleRoutine()
@@ -103,7 +117,6 @@ public class Pineapple : Fruit
 
         mainCamera.depth = -10;
 
-        // Включаем darkOverlay и spotlightCircle
         if (darkOverlay != null)
         {
             darkOverlay.gameObject.SetActive(true);
@@ -127,7 +140,6 @@ public class Pineapple : Fruit
             mainPos.z
         );
 
-        // Приближаем камеру и затемняем экран
         while (t < 1f)
         {
             t += Time.deltaTime * zoomSpeed;
@@ -155,11 +167,9 @@ public class Pineapple : Fruit
             yield return null;
         }
 
-        // Замедляем время
         Time.timeScale = slowTimeScale;
         Time.fixedDeltaTime = 0.02f * slowTimeScale;
 
-        // Следим за ананасом — двигаем spotlight за ним
         float timer = sliceWindow;
         while (timer > 0f)
         {
@@ -174,7 +184,6 @@ public class Pineapple : Fruit
                 );
             }
 
-            // Двигаем круг spotlight за ананасом на экране
             if (spotlightCircle != null && pineappleCamera != null)
             {
                 Vector3 screenPos = pineappleCamera.WorldToScreenPoint(transform.position);
@@ -184,11 +193,9 @@ public class Pineapple : Fruit
             yield return null;
         }
 
-        // Возвращаем нормальное время
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
 
-        // Взрываем всё рядом
         Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hits)
         {
@@ -216,7 +223,7 @@ public class Pineapple : Fruit
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.AddFruitXP();
+            GameManager.Instance.AddFruitRewards(0, XPReward);
             GameManager.Instance.OnFruitSliced();
             GameManager.Instance.ReturnPineappleCamera(pineappleCamera, darkOverlay, spotlightCircle, mainPos, mainSize, zoomSpeed);
         }

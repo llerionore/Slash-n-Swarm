@@ -26,12 +26,17 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private GameObject passiveItemPrefab;
     [SerializeField] private ActiveItemSlot activeItemSlotUI;
 
+    [Header("Price Scaling")]
+    [SerializeField] private float pricePerRound = 0.10f;
+    [SerializeField] private float maxPriceMultiplier = 2.5f;
+
     [Header("Stats UI")]
     [SerializeField] private PlayerStatsPanelUI statsPanelUI;
 
     [Header("Settings")]
     [SerializeField] private int baseRerollCost = 1;
 
+    private bool nextRerollIsFree = false;
     private int currentRound;
     private int rerollCount;
 
@@ -90,6 +95,7 @@ public class ShopManager : MonoBehaviour
 
         GenerateShop(false);
         RefreshAllUI();
+        AudioManager.Instance.SetMuffled(true);
     }
 
     public void CloseShopAndContinue()
@@ -103,20 +109,23 @@ public class ShopManager : MonoBehaviour
         {
             GameManager.Instance.BeginNextRoundAfterShop();
         }
+
+        AudioManager.Instance.SetMuffled(false);
     }
 
     public void RerollShop()
     {
-        if (GameManager.Instance == null) return;
-
         int cost = GetRerollCost();
-        if (!GameManager.Instance.TrySpendCoins(cost))
+
+        if (!nextRerollIsFree)
         {
-            Debug.Log("Not enough coins for reroll");
-            return;
+            if (GameManager.Instance == null) return;
+            if (!GameManager.Instance.TrySpendCoins(cost)) return;
         }
 
+        nextRerollIsFree = false;
         rerollCount++;
+
         GenerateShop(true);
         RefreshAllUI();
     }
@@ -127,15 +136,19 @@ public class ShopManager : MonoBehaviour
         if (GameManager.Instance == null) return;
 
         ShopItemData activeItem = PlayerInventory.Instance.ActiveItem;
-        if (activeItem == null) return;
-        if (activeItem.itemType != ShopItemType.Active) return;
+        if (activeItem == null) 
+            return;
+
+        if (activeItem.itemType != ShopItemType.Active) 
+            return;
 
         RemoveItemEffects(activeItem);
 
         ShopItemData removed = PlayerInventory.Instance.RemoveActiveItem();
-        if (removed == null) return;
+        if (removed == null) 
+            return;
 
-        int refund = Mathf.RoundToInt(removed.price * PlayerInventory.Instance.ActiveSellRefundPercent);
+        int refund = GetSellPrice(removed.price);
         GameManager.Instance.AddCoins(refund);
 
         RefreshAllUI();
@@ -170,9 +183,6 @@ public class ShopManager : MonoBehaviour
                 continue;
             }
 
-            if (reroll && card.IsLocked && card.Item != null)
-                continue;
-
             ShopItemData item = itemPool[Random.Range(0, itemPool.Length)];
 
             if (item == null)
@@ -182,7 +192,7 @@ public class ShopManager : MonoBehaviour
             }
 
             Debug.Log("[ShopManager] Setting card " + i + " -> " + item.itemName);
-            card.Setup(item, TryBuyItem, ToggleLockCard);
+            card.Setup(item, TryBuyItem, null);
         }
     }
 
@@ -224,11 +234,10 @@ public class ShopManager : MonoBehaviour
             return;
         }
 
-        if (!GameManager.Instance.TrySpendCoins(item.price))
-        {
-            Debug.LogWarning("[ShopManager] Not enough coins");
+        int price = GetScaledPrice(item.price);
+
+        if (!GameManager.Instance.TrySpendCoins(price))
             return;
-        }
 
         bool added = PlayerInventory.Instance.TryAddItem(item);
         Debug.Log("[ShopManager] TryAddItem result = " + added);
@@ -238,13 +247,40 @@ public class ShopManager : MonoBehaviour
 
         ApplyItemEffects(item);
         card.MarkSold();
+        CheckAllItemsBought();
         RefreshAllUI();
     }
 
-    private void ToggleLockCard(ShopCardUI card)
+    public int GetSellPrice(int basePrice)
     {
-        if (card == null) return;
-        card.ToggleLock();
+        int scaledPrice = GetScaledPrice(basePrice);
+        return Mathf.RoundToInt(scaledPrice * 0.65f);
+    }
+
+    public int GetScaledPrice(int basePrice)
+{
+    int round = 1;
+
+    if (GameManager.Instance != null)
+        round = GameManager.Instance.CurrentRound;
+
+    float multiplier = Mathf.Min(
+        1f + ((round - 1) * pricePerRound),
+        maxPriceMultiplier
+    );
+
+    return Mathf.RoundToInt(basePrice * multiplier);
+}
+
+    private void CheckAllItemsBought()
+    {
+        foreach (ShopCardUI card in shopCards)
+        {
+            if (card.gameObject.activeSelf && card.Item != null)
+                return;
+        }
+
+        nextRerollIsFree = true;
     }
 
     private void ApplyItemEffects(ShopItemData item)
@@ -282,6 +318,10 @@ public class ShopManager : MonoBehaviour
                 case ShopEffectType.Experience:
                     PlayerStats.Instance.AddExperience(effect.value);
                     break;
+
+                case ShopEffectType.StaminaSteal:
+                    PlayerStats.Instance.AddStaminaSteal(effect.value);
+                    break;
             }
         }
     }
@@ -317,8 +357,13 @@ public class ShopManager : MonoBehaviour
                 case ShopEffectType.Income:
                     PlayerStats.Instance.AddIncome(-effect.value);
                     break;
+
                 case ShopEffectType.Experience:
                     PlayerStats.Instance.AddExperience(-effect.value);
+                    break;
+
+                case ShopEffectType.StaminaSteal:
+                    PlayerStats.Instance.AddStaminaSteal(-effect.value);
                     break;
             }
         }
@@ -343,14 +388,18 @@ public class ShopManager : MonoBehaviour
 
     private void RefreshRerollUI()
     {
-        if (rerollCostText != null)
+        if (rerollCostText == null) return;
+
+        if (nextRerollIsFree)
+            rerollCostText.text = "Reroll - 0";
+        else
             rerollCostText.text = "Reroll - " + GetRerollCost();
     }
 
     private void RefreshWaveUI()
     {
         if (waveText != null)
-            waveText.text = "Shop (Round " + currentRound + ")";
+            waveText.text = "Shop (Round " + (currentRound - 1) + ")";
     }
 
     private void RefreshInventoryUI()

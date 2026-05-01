@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image staminaFill;
     [SerializeField] private PlayerStats playerStats;
 
+    [Header("Game Over UI")]
+    [SerializeField] private GameObject gameOverPanel;
+
     [Header("XP UI")]
     [SerializeField] private Image xpFill;
     [SerializeField] private TextMeshProUGUI levelText;
@@ -36,7 +39,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int currentLevel = 1;
     [SerializeField] private int currentXP = 0;
     [SerializeField] private int xpToNextLevel = 100;
-    [SerializeField] private int xpPerFruit = 20;
 
     [Header("XP Multiplier")]
     [SerializeField] private float xpMultiplier = 1f;
@@ -54,12 +56,34 @@ public class GameManager : MonoBehaviour
     [Header("Level Up Message")]
     [SerializeField] private float levelUpMessageDuration = 1.5f;
 
+    [Header("Active Item")]
+    [SerializeField] private AudioClip activeItemSound;
+    [SerializeField] private float activeItemVolume = 1f;
+
     [Header("Rounds")]
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private int currentRound = 1;
     [SerializeField] private int targetFruits = 10;
     [SerializeField] private int currentFruits = 0;
     [SerializeField] private int extraSpawn = 2;
+
+    [SerializeField] private int baseTargetFruits = 10;
+    [SerializeField] private int fruitsPerRound = 3;
+    [SerializeField] private int maxTargetFruits = 38;
+
+    [SerializeField] private float baseSpawnSpeed = 1f;
+    [SerializeField] private float spawnSpeedPerRound = 0.12f;
+    [SerializeField] private float maxSpawnSpeed = 2.1f;
+
+    [SerializeField] private TextMeshProUGUI countdownText;
+    [SerializeField] private float countdownStepTime = 0.6f;
+
+    [Header("Round Multipliers")]
+    [SerializeField] private float xpPerRound = 0.06f;
+    [SerializeField] private float goldPerRound = 0.08f;
+
+    [SerializeField] private float maxXpMultiplier = 1.8f;
+    [SerializeField] private float maxGoldMultiplier = 2.0f;
 
     private int slicedFruits = 0;
     private int pendingLevelUps = 0;
@@ -175,6 +199,37 @@ public class GameManager : MonoBehaviour
         return CurrentStamina > 0f;
     }
 
+    public void TryStaminaSteal()
+    {
+        if (PlayerStats.Instance == null) return;
+
+        float chance = PlayerStats.Instance.StaminaSteal;
+
+        if (chance <= 0f) return;
+
+        float roll = Random.Range(0f, 100f);
+
+        if (roll > chance) return;
+
+        float staminaCap = PlayerStats.Instance.MaxStamina;
+
+        float restoreAmount = staminaCap * 0.05f;
+
+        CurrentStamina += restoreAmount;
+        CurrentStamina = Mathf.Clamp(CurrentStamina, 0f, staminaCap);
+
+        UpdateStaminaUI();
+    }
+
+    public void PlayActiveItemSound()
+    {
+        if (audioSource == null) return;
+        if (activeItemSound == null) return;
+
+        audioSource.pitch = 1f;
+        audioSource.PlayOneShot(activeItemSound, activeItemVolume);
+    }
+
     public void SetInfiniteStamina(bool value)
     {
         infiniteStamina = value;
@@ -255,6 +310,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     private void UpdateXPUI()
     {
         if (xpFill != null)
@@ -280,15 +336,52 @@ public class GameManager : MonoBehaviour
 
     private void StartRound()
     {
+        StartCoroutine(StartRoundRoutine());
+    }
+
+    private IEnumerator StartRoundRoutine()
+    {
         currentFruits = 0;
         slicedFruits = 0;
 
-        targetFruits = 10 + (currentRound * 2);
+        targetFruits = Mathf.Min(
+            baseTargetFruits + ((currentRound - 1) * fruitsPerRound),
+            maxTargetFruits
+        );
+
         int spawnCount = targetFruits + extraSpawn;
 
-        if (spawner != null) spawner.StartSpawning(spawnCount);
+        float spawnSpeed = Mathf.Min(
+            baseSpawnSpeed + ((currentRound - 1) * spawnSpeedPerRound),
+            maxSpawnSpeed
+        );
+
+        if (spawner != null)
+            spawner.SetSpawnSpeedMultiplier(spawnSpeed);
 
         UpdateRoundUI();
+
+        if (countdownText != null)
+        {
+            countdownText.gameObject.SetActive(true);
+
+            countdownText.text = "3";
+            yield return new WaitForSeconds(countdownStepTime);
+
+            countdownText.text = "2";
+            yield return new WaitForSeconds(countdownStepTime);
+
+            countdownText.text = "1";
+            yield return new WaitForSeconds(countdownStepTime);
+
+            countdownText.text = "SLICE!";
+            yield return new WaitForSeconds(0.35f);
+
+            countdownText.gameObject.SetActive(false);
+        }
+
+        if (spawner != null)
+            spawner.StartSpawning(spawnCount);
     }
 
     private void UpdateRoundUI()
@@ -339,6 +432,12 @@ public class GameManager : MonoBehaviour
 
     public void BeginNextRoundAfterShop()
     {
+        if (PlayerInventory.Instance != null)
+            PlayerInventory.Instance.DecreaseCooldown();
+
+        GameManager.Instance.SetXPMultiplier(1f);
+        GameManager.Instance.SetGoldMultiplier(1f);
+
         pendingLevelUps = 0;
         StartRound();
     }
@@ -346,12 +445,45 @@ public class GameManager : MonoBehaviour
     private void LoseGame()
     {
         Debug.Log("GAME OVER");
+
         Time.timeScale = 0f;
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+        );
+    }
+
+    public void LoadMainMenu()
+    {
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     public void AddXP(int amount)
     {
-        currentXP += amount;
+        float experiencePercent = 0f;
+
+        if (PlayerStats.Instance != null)
+            experiencePercent = PlayerStats.Instance.Experience;
+
+        float statMultiplier = 1f + experiencePercent / 100f;
+
+        float roundMultiplier = Mathf.Min(
+            1f + ((currentRound - 1) * xpPerRound),
+            maxXpMultiplier
+        );
+
+        float multiplier = statMultiplier * roundMultiplier;
+        int finalAmount = Mathf.RoundToInt(amount * multiplier);
+
+        currentXP += finalAmount;
 
         while (currentXP >= xpToNextLevel)
         {
@@ -362,9 +494,30 @@ public class GameManager : MonoBehaviour
         UpdateXPUI();
     }
 
-    public void AddFruitXP()
+    public void AddFruitRewards(int coinAmount, int xpAmount)
     {
-        AddXP(Mathf.RoundToInt(xpPerFruit * xpMultiplier));
+        bool isCrit = false;
+
+        if (PlayerStats.Instance != null)
+            isCrit = PlayerStats.Instance.RollCrit();
+
+        int finalCoins = coinAmount;
+        int finalXP = xpAmount;
+
+        if (PlayerStats.Instance != null)
+            finalCoins = PlayerStats.Instance.ApplyIncomeBonus(finalCoins);
+
+        if (isCrit)
+        {
+            finalCoins *= 2;
+            finalXP *= 2;
+            Debug.Log("CRITICAL SLICE! x2 coins and XP");
+        }
+
+        currentCoins += finalCoins;
+        AddXP(finalXP);
+
+        UpdateCoinsUI();
     }
 
     public void AddCoins(int amount)
@@ -373,7 +526,14 @@ public class GameManager : MonoBehaviour
         if (PlayerStats.Instance != null)
             incomePercent = PlayerStats.Instance.Income;
 
-        float multiplier = 1f + incomePercent / 100f;
+        float statMultiplier = 1f + incomePercent / 100f;
+
+        float roundMultiplier = Mathf.Min(
+            1f + ((currentRound - 1) * goldPerRound),
+            maxGoldMultiplier
+        );
+
+        float multiplier = statMultiplier * roundMultiplier;
         int finalAmount = Mathf.RoundToInt(amount * multiplier);
 
         if (finalAmount < 0) finalAmount = 0;
@@ -384,7 +544,7 @@ public class GameManager : MonoBehaviour
 
     public void AddFruitCoins(int amount)
     {
-        AddCoins(Mathf.RoundToInt(amount * goldMultiplier));
+        AddCoins(Mathf.RoundToInt(amount));
     }
 
     public void OnFruitSliced()
@@ -465,8 +625,15 @@ public class GameManager : MonoBehaviour
     private void PlayLevelUpSound()
     {
         if (audioSource == null || levelUpSound == null) return;
+
         audioSource.pitch = 1f;
-        audioSource.PlayOneShot(levelUpSound, levelUpVolume);
+
+        float volume = levelUpVolume;
+
+        if (SettingsManager.Instance != null)
+            volume *= SettingsManager.Instance.SfxVolume;
+
+        audioSource.PlayOneShot(levelUpSound, volume);
     }
 
     private void LevelUp()
@@ -502,7 +669,13 @@ public class GameManager : MonoBehaviour
 
         AudioClip clip = sliceSounds[Random.Range(0, sliceSounds.Length)];
         audioSource.pitch = Random.Range(minSlicePitch, maxSlicePitch);
-        audioSource.PlayOneShot(clip, sliceVolume);
+
+        float volume = sliceVolume;
+
+        if (SettingsManager.Instance != null)
+            volume *= SettingsManager.Instance.SfxVolume;
+
+        audioSource.PlayOneShot(clip, volume);
     }
 
     public void ReturnPineappleCamera(Camera pineappleCamera, Image darkOverlay, Image spotlightCircle, Vector3 originalPos, float originalSize, float speed)

@@ -20,7 +20,7 @@ public class Grape : Fruit
         if (GameManager.Instance != null)
         {
             GameManager.Instance.PlaySliceSound();
-            GameManager.Instance.AddFruitXP();
+            GameManager.Instance.AddFruitRewards(0, XPReward);
             GameManager.Instance.AddCoins(coinReward);
         }
 

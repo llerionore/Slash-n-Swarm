@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brocoli
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -64,14 +68,19 @@ PrefabInstance:
       addedObject: {fileID: 480044415738101701}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 660321315484199706}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5169997877765771238}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 586149913183181646}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -598582871367919669}
   m_SourcePrefab: {fileID: 100100000, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
+--- !u!23 &4780822264556718508 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
+  m_PrefabInstance: {fileID: 6168085567843865896}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6437923108870498425 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e12d98f780e3d6341b158f9fc3f3932f, type: 3}
@@ -125,26 +134,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.05044635, y: 0.057862464, z: 0.07180864}
   m_Center: {x: 0.008852135, y: 0.009216948, z: -0.010520997}
---- !u!114 &660321315484199706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6437923108870498425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa5a315231f554d4b8e3d5f244d00466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slicedPrefab: {fileID: 7548407465379173500, guid: a7018f0af6ee5c94e9ae1e6a310c9e78, type: 3}
-  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 241f6a7ce771fe246a55d99740904a89, type: 3}
-  slicedLifetime: 3
-  juiceEffectLifetime: 2
-  coinReward: 5
-  canBeFrozen: 0
-  freezeChance: 0.2
-  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
 --- !u!114 &5169997877765771238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,3 +161,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationAxis: {x: 0, y: 1, z: 0}
   rotationSpeed: 90
+--- !u!114 &-598582871367919669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437923108870498425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9892ab030bda1d4c8b2ac7cafac4400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slicedPrefab: {fileID: 7548407465379173500, guid: a7018f0af6ee5c94e9ae1e6a310c9e78, type: 3}
+  juiceEffectPrefab: {fileID: 6152620863619634085, guid: 241f6a7ce771fe246a55d99740904a89, type: 3}
+  slicedLifetime: 4
+  juiceEffectLifetime: 2
+  coinReward: 4
+  xpReward: 17
+  canBeFrozen: 0
+  freezeChance: 0.2
+  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
+  armorHP: 2
+  hitDelay: 0.25
+  crackMaterials:
+  - {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
+  fruitRenderer: {fileID: 4780822264556718508}
+  hitSound: {fileID: 8300000, guid: e9fa41b73ac511949bbf650abacd77d5, type: 3}

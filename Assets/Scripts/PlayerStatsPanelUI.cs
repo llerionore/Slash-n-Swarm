@@ -10,6 +10,7 @@ public class PlayerStatsPanelUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI luckText;
     [SerializeField] private TextMeshProUGUI incomeText;
     [SerializeField] private TextMeshProUGUI experienceText;
+    [SerializeField] private TextMeshProUGUI staminaStealText;
 
     private void OnEnable()
     {
@@ -40,5 +41,6 @@ public class PlayerStatsPanelUI : MonoBehaviour
         luckText.text = "Luck: " + PlayerStats.Instance.Luck.ToString("F0");
         incomeText.text = "Income: " + PlayerStats.Instance.Income.ToString("F0") + "%";
         experienceText.text = "Experience: " + PlayerStats.Instance.Experience.ToString("F0") + "%";
+        staminaStealText.text = "Stamina Steal: " + PlayerStats.Instance.StaminaSteal.ToString("F0") + "%";
     }
 }

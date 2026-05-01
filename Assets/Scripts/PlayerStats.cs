@@ -12,6 +12,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float luck = 0f;
     [SerializeField] private float income = 0f;
     [SerializeField] private float experience = 0f;
+    [SerializeField] private float staminaSteal = 0f;
 
     public System.Action OnStatsChanged;
 
@@ -22,6 +23,7 @@ public class PlayerStats : MonoBehaviour
     public float Luck => luck;
     public float Income => income;
     public float Experience => experience;
+    public float StaminaSteal => staminaSteal;
 
     private void Awake()
     {
@@ -81,5 +83,36 @@ public class PlayerStats : MonoBehaviour
     {
         experience += amount;
         OnStatsChanged?.Invoke();
+    }
+
+    public void AddStaminaSteal(float amount)
+    {
+        staminaSteal += amount;
+        if (staminaSteal < 0f)
+            staminaSteal = 0f;
+
+        OnStatsChanged?.Invoke();
+    }
+
+    public bool RollCrit()
+    {
+        return Random.value < critChance;
+    }
+
+    public int ApplyIncomeBonus(int baseCoins)
+    {
+        float multiplier = 1f + income / 100f;
+        return Mathf.Max(0, Mathf.RoundToInt(baseCoins * multiplier));
+    }
+
+    public int ApplyExperienceBonus(int baseXP)
+    {
+        float multiplier = 1f + experience / 100f;
+        return Mathf.Max(0, Mathf.RoundToInt(baseXP * multiplier));
+    }
+
+    public float GetLuckRarityBonus()
+    {
+        return luck;
     }
 }

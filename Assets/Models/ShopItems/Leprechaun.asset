@@ -16,8 +16,9 @@ MonoBehaviour:
   description: '+10 Income
 
     -3 Luck'
-  icon: {fileID: 0}
-  price: 7
+  icon: {fileID: 21300000, guid: 4494cc603b1088f4c8e4170dcb49d12d, type: 3}
+  iconAnimator: {fileID: 9100000, guid: 51d9c111cf979364c8193eff7c1fe07c, type: 2}
+  price: 18
   itemType: 0
   effects:
   - effectType: 5

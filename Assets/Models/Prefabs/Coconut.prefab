@@ -84,6 +84,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baf0f7310f6aa5842a45fad9de0a54c8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5723143465193478122}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baf0f7310f6aa5842a45fad9de0a54c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8890260379514731308}
   m_SourcePrefab: {fileID: 100100000, guid: baf0f7310f6aa5842a45fad9de0a54c8, type: 3}
 --- !u!1 &3349624755765986127 stripped
 GameObject:
@@ -131,9 +134,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slicedPrefab: {fileID: 4993161594462910896, guid: b3a2d6c039acfe84caa1cdaa09b76807, type: 3}
   juiceEffectPrefab: {fileID: 8656481818326495124, guid: 33394e8e2ba4f3548b6438a6d716db0b, type: 3}
-  slicedLifetime: 3
+  slicedLifetime: 4
   juiceEffectLifetime: 2
-  coinReward: 5
+  coinReward: 3
+  xpReward: 18
+  canBeFrozen: 1
+  freezeChance: 0.2
+  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
 --- !u!114 &5870069267049139010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,3 +175,36 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.8671255
   m_Center: {x: 0.07370931, y: 0.10831118, z: 0.015342786}
+--- !u!114 &8890260379514731308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3349624755765986127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9892ab030bda1d4c8b2ac7cafac4400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slicedPrefab: {fileID: 4993161594462910896, guid: b3a2d6c039acfe84caa1cdaa09b76807, type: 3}
+  juiceEffectPrefab: {fileID: 8656481818326495124, guid: 33394e8e2ba4f3548b6438a6d716db0b, type: 3}
+  slicedLifetime: 4
+  juiceEffectLifetime: 2
+  coinReward: 3
+  xpReward: 18
+  canBeFrozen: 0
+  freezeChance: 0.2
+  frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
+  armorHP: 4
+  hitDelay: 0.3
+  crackMaterials:
+  - {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
+  - {fileID: 2100000, guid: 881d164e2d37dbc42821d8c3b2dd396b, type: 2}
+  fruitRenderer: {fileID: 3854163772212437658}
+  hitSound: {fileID: 8300000, guid: 6ce37ca6c84991c49bf1fdc959a047e6, type: 3}
+--- !u!23 &3854163772212437658 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: baf0f7310f6aa5842a45fad9de0a54c8, type: 3}
+  m_PrefabInstance: {fileID: 2503201111666884126}
+  m_PrefabAsset: {fileID: 0}

@@ -50,12 +50,22 @@ public class Blade : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Time.timeScale == 0f)
+        {
+            if (slicing)
+                StopSlice();
+
+            return;
+        }
+
+        KeyCode sliceKey = GetSliceKey();
+
+        if (Input.GetKeyDown(sliceKey))
         {
             if (GameManager.Instance == null || GameManager.Instance.HasStamina())
                 StartSlice();
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetKeyUp(sliceKey))
         {
             StopSlice();
         }
@@ -63,6 +73,14 @@ public class Blade : MonoBehaviour
         {
             ContinueSlice();
         }
+    }
+
+    private KeyCode GetSliceKey()
+    {
+        if (SettingsManager.Instance != null)
+            return SettingsManager.Instance.SliceKey;
+
+        return KeyCode.Mouse0;
     }
 
     private Camera GetActiveCamera()

@@ -77,7 +77,7 @@ PrefabInstance:
       addedObject: {fileID: 8867720046812430021}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 170cbdae90d81804fb616d8315f0d82b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -8577296820796872049}
+      addedObject: {fileID: 9032412656802773244}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 170cbdae90d81804fb616d8315f0d82b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6799647471275897568}
@@ -85,6 +85,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: -1778448970749567387}
   m_SourcePrefab: {fileID: 100100000, guid: 170cbdae90d81804fb616d8315f0d82b, type: 3}
+--- !u!23 &584439458555134227 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 170cbdae90d81804fb616d8315f0d82b, type: 3}
+  m_PrefabInstance: {fileID: 2296217019479235991}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1377156900147765446 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 170cbdae90d81804fb616d8315f0d82b, type: 3}
@@ -117,7 +122,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &-8577296820796872049
+--- !u!114 &9032412656802773244
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,22 +131,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1377156900147765446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa5a315231f554d4b8e3d5f244d00466, type: 3}
+  m_Script: {fileID: 11500000, guid: c9892ab030bda1d4c8b2ac7cafac4400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slicedPrefab: {fileID: 2268608356271435972, guid: ff2b5982de792614c93ada14eb57ffc9, type: 3}
   juiceEffectPrefab: {fileID: 6152620863619634085, guid: a7ade31da0dd9a445ad0042bed3ef593, type: 3}
-  slicedLifetime: 3
+  slicedLifetime: 4
   juiceEffectLifetime: 2
-  coinReward: 5
-<<<<<<< HEAD
+  coinReward: 4
+  xpReward: 10
   canBeFrozen: 0
-  freezeChance: 0.1
-  freezeDuration: 0.5
-  slowTimeScale: 0.3
+  freezeChance: 0.2
   frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
-=======
->>>>>>> 727a6e0c3be1843daee3e6af58d6541a13984a25
+  armorHP: 3
+  hitDelay: 0.3
+  crackMaterials:
+  - {fileID: 2100000, guid: 5b8344d69cdb1ff47b79a150b960a9ca, type: 2}
+  - {fileID: 2100000, guid: 881d164e2d37dbc42821d8c3b2dd396b, type: 2}
+  fruitRenderer: {fileID: 584439458555134227}
+  hitSound: {fileID: 8300000, guid: e9fa41b73ac511949bbf650abacd77d5, type: 3}
 --- !u!114 &6799647471275897568
 MonoBehaviour:
   m_ObjectHideFlags: 0

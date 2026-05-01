@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: EnergyDrink
   m_EditorClassIdentifier: 
   itemName: Energy Drink
-  description: Increases stamina
-  icon: {fileID: 0}
-  price: 9
+  description: Increases stamina for 1 round
+  icon: {fileID: -1951030484, guid: 72367a6ce40467543b50036574717f8a, type: 3}
+  iconAnimator: {fileID: 9100000, guid: 992280276015cf149b0191928c9216a8, type: 2}
+  price: 14
   itemType: 1
   effects: []

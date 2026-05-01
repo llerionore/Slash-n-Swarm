@@ -1,10 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject restartConfirmPanel;
 
     [Header("Stat Texts")]
     [SerializeField] private TextMeshProUGUI strengthText;
@@ -21,24 +24,29 @@ public class PauseMenu : MonoBehaviour
     {
         if (pausePanel != null)
             pausePanel.SetActive(false);
+
+        if (restartConfirmPanel != null)
+            restartConfirmPanel.SetActive(false);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (restartConfirmPanel != null && restartConfirmPanel.activeSelf)
+            {
+                HideRestartConfirm();
+                return;
+            }
+
+            if (settingsPanel != null && settingsPanel.activeSelf)
+            {
+                settingsPanel.SetActive(false);
+                return;
+            }
+
             ToggleMenu();
-    }
-
-    private void OnEnable()
-    {
-        if (PlayerStats.Instance != null)
-            PlayerStats.Instance.OnStatsChanged += RefreshStats;
-    }
-
-    private void OnDisable()
-    {
-        if (PlayerStats.Instance != null)
-            PlayerStats.Instance.OnStatsChanged -= RefreshStats;
+        }
     }
 
     public void ToggleMenu()
@@ -48,7 +56,19 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel != null)
             pausePanel.SetActive(isOpen);
 
+        if (!isOpen)
+        {
+            if (restartConfirmPanel != null)
+                restartConfirmPanel.SetActive(false);
+
+            if (settingsPanel != null)
+                settingsPanel.SetActive(false);
+        }
+
         Time.timeScale = isOpen ? 0f : 1f;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMuffled(isOpen);
 
         if (isOpen)
             RefreshStats();
@@ -61,7 +81,48 @@ public class PauseMenu : MonoBehaviour
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
+        if (restartConfirmPanel != null)
+            restartConfirmPanel.SetActive(false);
+
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
         Time.timeScale = 1f;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMuffled(false);
+    }
+
+    public void ShowRestartConfirm()
+    {
+        if (restartConfirmPanel != null)
+            restartConfirmPanel.SetActive(true);
+    }
+
+    public void HideRestartConfirm()
+    {
+        if (restartConfirmPanel != null)
+            restartConfirmPanel.SetActive(false);
+    }
+
+    public void ConfirmRestartGame()
+    {
+        Time.timeScale = 1f;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMuffled(false);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ExitToMainMenu()
+    {
+        Time.timeScale = 1f;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMuffled(false);
+
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void RefreshStatsPublic()
@@ -82,7 +143,7 @@ public class PauseMenu : MonoBehaviour
         if (incomeText != null)
             incomeText.text = "Income: " + PlayerStats.Instance.Income.ToString("F0") + "%";
 
-        if (incomeText != null)
+        if (experienceText != null)
             experienceText.text = "Experience: " + PlayerStats.Instance.Experience.ToString("F0") + "%";
     }
 }

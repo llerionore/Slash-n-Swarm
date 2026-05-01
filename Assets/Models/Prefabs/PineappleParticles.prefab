@@ -48,9 +48,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5969587839515132356, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5666326996393585947, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2793999425196200487, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
       propertyPath: m_Name
       value: PineappleParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2636961170178775368, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3079223023191311895, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934968314938569139, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6993717523059571753, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7011338584839814257, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7542283774460768043, guid: e66d7312e79c1e542b01171d6e406b8f, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

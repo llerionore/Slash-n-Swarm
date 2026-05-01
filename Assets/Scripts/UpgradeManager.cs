@@ -63,6 +63,9 @@ public class UpgradeManager : MonoBehaviour
         UpdateRerollText();
         RefreshStatsPanel();
 
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMuffled(true);
+
         Debug.Log("Upgrade sequence started. Remaining = " + remainingSelections);
     }
 
@@ -97,6 +100,9 @@ public class UpgradeManager : MonoBehaviour
         {
             GameManager.Instance.BeginNextRoundAfterShop();
         }
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMuffled(false);
     }
 
     public void RerollAll()
@@ -191,6 +197,18 @@ public class UpgradeManager : MonoBehaviour
 
             case UpgradeType.Luck:
                 PlayerStats.Instance.AddLuck(data.value);
+                break;
+
+            case UpgradeType.Income:
+                PlayerStats.Instance.AddIncome(data.value);
+                break;
+
+            case UpgradeType.Experience:
+                PlayerStats.Instance.AddExperience(data.value);
+                break;
+
+            case UpgradeType.StaminaSteal:
+                PlayerStats.Instance.AddStaminaSteal(data.value);
                 break;
         }
     }

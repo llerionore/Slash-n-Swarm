@@ -11,6 +11,7 @@ public class PlayerInventory : MonoBehaviour
 
     private readonly List<ShopItemData> passiveItems = new List<ShopItemData>();
     private ShopItemData activeItem;
+    private int activeItemCooldown = 0;
 
     public IReadOnlyList<ShopItemData> PassiveItems => passiveItems;
     public ShopItemData ActiveItem => activeItem;
@@ -63,6 +64,27 @@ public class PlayerInventory : MonoBehaviour
 
         OnInventoryChanged?.Invoke();
         return removed;
+    }
+
+    public bool CanUseActiveItem()
+    {
+        return activeItem != null && activeItemCooldown == 0;
+    }
+
+    public void SetActiveItemCooldown(int rounds)
+    {
+        activeItemCooldown = rounds;
+    }
+
+    public void DecreaseCooldown()
+    {
+        if (activeItemCooldown > 0)
+            activeItemCooldown--;
+    }
+
+    public int GetCooldown()
+    {
+        return activeItemCooldown;
     }
 
     public void ClearAll()

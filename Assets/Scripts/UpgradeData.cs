@@ -6,7 +6,10 @@ public enum UpgradeType
     MaxStamina,
     StaminaRegen,
     CritChance,
-    Luck
+    Luck,
+    Income,
+    Experience,
+    StaminaSteal
 }
 
 public enum UpgradeRarity

@@ -64,13 +64,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6303116636865536453, guid: 411cfdade26917c4abc2b21492be55a8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -895306380916907690, guid: 411cfdade26917c4abc2b21492be55a8, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 31ce801947c73774dbcc59cc7c9d846b, type: 2}
+    - target: {fileID: 243041194690276544, guid: 411cfdade26917c4abc2b21492be55a8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 411cfdade26917c4abc2b21492be55a8, type: 3}
       propertyPath: m_Name
       value: ExplosiveStrawberrySliced
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 411cfdade26917c4abc2b21492be55a8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

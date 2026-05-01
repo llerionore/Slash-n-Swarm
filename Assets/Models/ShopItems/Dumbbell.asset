@@ -16,7 +16,8 @@ MonoBehaviour:
   description: '+3 Strength
 
     -4 Crit'
-  icon: {fileID: 0}
-  price: 7
+  icon: {fileID: -1154246653, guid: eea11164e365be248a0c8d4467735dcf, type: 3}
+  iconAnimator: {fileID: 9100000, guid: fc0c2913953d41a4482f3dd55ba9927f, type: 2}
+  price: 18
   itemType: 0
   effects: []

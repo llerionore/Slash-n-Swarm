@@ -48,9 +48,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7615926346883513638, guid: 14ec279aa34823b47aecf9c8697d1f57, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -7615438802537861257, guid: 14ec279aa34823b47aecf9c8697d1f57, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 14ec279aa34823b47aecf9c8697d1f57, type: 3}
       propertyPath: m_Name
       value: Bomb1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14ec279aa34823b47aecf9c8697d1f57, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7542283774460768043, guid: 14ec279aa34823b47aecf9c8697d1f57, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -120,8 +136,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.0074825
-  m_Center: {x: -0.081357956, y: 0.027977198, z: -0.2976935}
+  m_Radius: 0.92684823
+  m_Center: {x: -0.0007236004, y: 0.02797693, z: -0.29769322}
 --- !u!114 &6637109432935920054
 MonoBehaviour:
   m_ObjectHideFlags: 0

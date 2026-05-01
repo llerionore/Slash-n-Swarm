@@ -11,15 +11,31 @@ public class InventoryItem : MonoBehaviour
     {
         if (item == null) return;
 
-        if (iconImage != null)
-        {
-            iconImage.sprite = item.icon;
-            iconImage.enabled = item.icon != null;
-        }
+        SetupIcon(item);
 
         if (nameText != null)
-        {
             nameText.text = item.itemName;
+    }
+
+    private void SetupIcon(ShopItemData item)
+    {
+        if (iconImage == null || item == null) return;
+
+        iconImage.sprite = item.icon;
+        iconImage.enabled = item.icon != null;
+
+        Animator animator = iconImage.GetComponent<Animator>();
+
+        if (animator == null) return;
+
+        animator.runtimeAnimatorController = item.iconAnimator;
+        animator.enabled = item.iconAnimator != null;
+
+        if (animator.enabled)
+        {
+            animator.Rebind();
+            animator.Update(0f);
+            animator.Play(0, 0, 0f);
         }
     }
 }

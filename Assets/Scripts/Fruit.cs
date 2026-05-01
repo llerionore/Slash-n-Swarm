@@ -11,6 +11,9 @@ public class Fruit : MonoBehaviour
 
     [Header("Rewards")]
     [SerializeField] protected int coinReward = 5;
+    [SerializeField] private int xpReward = 10;
+
+    public int XPReward => xpReward;
 
     [Header("Freeze")]
     [SerializeField] private bool canBeFrozen = false;
@@ -57,8 +60,8 @@ public class Fruit : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.PlaySliceSound();
-            GameManager.Instance.AddFruitXP();
-            GameManager.Instance.AddFruitCoins(coinReward);
+            GameManager.Instance.AddFruitRewards(coinReward, XPReward);
+            GameManager.Instance.TryStaminaSteal();
         }
 
         if (juiceEffectPrefab != null)

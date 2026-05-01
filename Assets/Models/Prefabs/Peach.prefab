@@ -139,13 +139,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slicedPrefab: {fileID: 326771415562967556, guid: 88814d7baf98bcf418829d1d0819294c, type: 3}
   juiceEffectPrefab: {fileID: 6152620863619634085, guid: 51f7bc0e100b82943ada63db02ebbd09, type: 3}
-  slicedLifetime: 5
+  slicedLifetime: 4
   juiceEffectLifetime: 2
-  coinReward: 5
+  coinReward: 2
+  xpReward: 10
   canBeFrozen: 1
-  freezeChance: 0.1
-  freezeDuration: 0.5
-  slowTimeScale: 0.3
+  freezeChance: 0.15
   frozenColor: {r: 0.5, g: 0.8, b: 1, a: 1}
 --- !u!114 &5222723164116593264
 MonoBehaviour:
